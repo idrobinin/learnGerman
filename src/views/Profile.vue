@@ -1,9 +1,5 @@
 <template>
-  <div>
-    <h1>PROFILE</h1>
-  </div>
+  <h1>PROFILE</h1>
 </template>
 
-<script setup lang="ts"></script>
-
-<style scoped></style>
+<script setup></script>
