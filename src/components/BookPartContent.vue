@@ -24,7 +24,7 @@
           class="text-subheading text-center"
           :style="{ fontSize: `${fontSize}px` }"
         >
-          Размер текста
+          Размер шрифта
         </div>
 
         <v-slider
