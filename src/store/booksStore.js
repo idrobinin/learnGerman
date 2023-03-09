@@ -1,106 +1,109 @@
 import { defineStore } from "pinia";
-import { reactive } from "vue";
+import { onBeforeMount, reactive } from "vue";
+import { db } from "@/config/firebase";
+import { collection, getDocs } from "firebase/firestore/lite";
 
 export const useBooksStore = defineStore("booksStore", () => {
   // массив с книгами
-  const books = reactive([
-    {
-      id: "tfyvbijnomkpm657898",
-      title: "Harry Potter und Stein der Weisen 1",
-      description: "Первая глава первой книги о Гарри Поттере",
-      imageId: "oj34bnrk3jtb3jjb",
-      parts: [
-        {
-          id: "tfvyuyibn",
-          title: "Part 1",
-          youtube_id: "ijencviqjnvd324",
-        },
-        {
-          id: "tfojbnibn",
-          title: "Part 2",
-          youtube_id: "ijencviqj8yvb",
-        },
-        {
-          id: "rrrruyibn",
-          title: "Part 3",
-          youtube_id: "ijencv345vd324",
-        },
-        {
-          id: "tfv4ojnyuyibn",
-          title: "Part 4",
-          youtube_id: "ij35nvd324",
-        },
-      ],
-      levelLanguage: ["B2", "C1"],
-      rating: 4,
-      ratingsCount: 104,
-      youtube_playlist_id: "5f67d8",
-    },
-    {
-      id: "tfyvbi34kpm657898",
-      title: "Harry Potter und Stein der Weisen 2",
-      description: "Вторая  глава первой книги о Гарри Поттере",
-      imageId: "oj34blknpkn3jjb",
-      parts: [
-        {
-          id: "tfvyuyibn",
-          title: "Part 1",
-          youtube_id: "ijencviqjnvd324",
-        },
-        {
-          id: "tfojbnibn",
-          title: "Part 2",
-          youtube_id: "ijencviqj8yvb",
-        },
-        {
-          id: "rrrruyibn",
-          title: "Part 3",
-          youtube_id: "ijencv345vd324",
-        },
-        {
-          id: "tfv4ojnyuyibn",
-          title: "Part 4",
-          youtube_id: "ij35nvd324",
-        },
-      ],
-      levelLanguage: ["B1", "B2"],
-      rating: 3.5,
-      ratingsCount: 74,
-      youtube_playlist_id: "5f65kin8",
-    },
-    {
-      id: "tfyon5op5m657898",
-      title: "Harry Potter und Stein der Weisen 3",
-      description: "Третья  глава первой книги о Гарри Поттере",
-      imageId: "onbo34inb4o34",
-      parts: [
-        {
-          id: "tfvyuyibn",
-          title: "Part 1",
-          youtube_id: "ijencviqjnvd324",
-        },
-        {
-          id: "tfojbnibn",
-          title: "Part 2",
-          youtube_id: "ijencviqj8yvb",
-        },
-        {
-          id: "rrrruyibn",
-          title: "Part 3",
-          youtube_id: "ijencv345vd324",
-        },
-        {
-          id: "tfv4ojnyuyibn",
-          title: "Part 4",
-          youtube_id: "ij35nvd324",
-        },
-      ],
-      levelLanguage: ["A2"],
-      rating: 3.7,
-      ratingsCount: 59,
-      youtube_playlist_id: "5545kin8",
-    },
-  ]);
+  const books = reactive([]);
+  // const books = reactive([
+  //   {
+  //     id: "tfyvbijnomkpm657898",
+  //     title: "Harry Potter und Stein der Weisen 1",
+  //     description: "Первая глава первой книги о Гарри Поттере",
+  //     imageId: "oj34bnrk3jtb3jjb",
+  //     levelLanguage: ["B2", "C1"],
+  //     rating: 4,
+  //     ratingsCount: 104,
+  //     youtube_playlist_id: "5f67d8",
+  //     parts: [
+  //       {
+  //         id: "tfvyuyibn",
+  //         title: "Part 1",
+  //         youtube_id: "ijencviqjnvd324",
+  //       },
+  //       {
+  //         id: "tfojbnibn",
+  //         title: "Part 2",
+  //         youtube_id: "ijencviqj8yvb",
+  //       },
+  //       {
+  //         id: "rrrruyibn",
+  //         title: "Part 3",
+  //         youtube_id: "ijencv345vd324",
+  //       },
+  //       {
+  //         id: "tfv4ojnyuyibn",
+  //         title: "Part 4",
+  //         youtube_id: "ij35nvd324",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: "tfyvbi34kpm657898",
+  //     title: "Harry Potter und Stein der Weisen 2",
+  //     description: "Вторая  глава первой книги о Гарри Поттере",
+  //     imageId: "oj34blknpkn3jjb",
+  //     levelLanguage: ["B1", "B2"],
+  //     rating: 3.5,
+  //     ratingsCount: 74,
+  //     youtube_playlist_id: "5f65kin8",
+  //     parts: [
+  //       {
+  //         id: "tfvyuyibn",
+  //         title: "Part 1",
+  //         youtube_id: "ijencviqjnvd324",
+  //       },
+  //       {
+  //         id: "tfojbnibn",
+  //         title: "Part 2",
+  //         youtube_id: "ijencviqj8yvb",
+  //       },
+  //       {
+  //         id: "rrrruyibn",
+  //         title: "Part 3",
+  //         youtube_id: "ijencv345vd324",
+  //       },
+  //       {
+  //         id: "tfv4ojnyuyibn",
+  //         title: "Part 4",
+  //         youtube_id: "ij35nvd324",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: "tfyon5op5m657898",
+  //     title: "Harry Potter und Stein der Weisen 3",
+  //     description: "Третья  глава первой книги о Гарри Поттере",
+  //     imageId: "onbo34inb4o34",
+  //     levelLanguage: ["A2"],
+  //     rating: 3.7,
+  //     ratingsCount: 59,
+  //     youtube_playlist_id: "5545kin8",
+  //     parts: [
+  //       {
+  //         id: "tfvyuyibn",
+  //         title: "Part 1",
+  //         youtube_id: "ijencviqjnvd324",
+  //       },
+  //       {
+  //         id: "tfojbnibn",
+  //         title: "Part 2",
+  //         youtube_id: "ijencviqj8yvb",
+  //       },
+  //       {
+  //         id: "rrrruyibn",
+  //         title: "Part 3",
+  //         youtube_id: "ijencv345vd324",
+  //       },
+  //       {
+  //         id: "tfv4ojnyuyibn",
+  //         title: "Part 4",
+  //         youtube_id: "ij35nvd324",
+  //       },
+  //     ],
+  //   },
+  // ]);
   const bookParts = reactive([
     {
       bookId: "tfyvbijnomkpm657898",
@@ -198,6 +201,23 @@ export const useBooksStore = defineStore("booksStore", () => {
       ],
     },
   ]);
+
+  // загружаем книги из БД
+  const LOAD_BOOKS = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "books"));
+      querySnapshot.forEach((doc) => {
+        books.push(doc.data());
+      });
+      console.log(books);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  onBeforeMount(() => {
+    LOAD_BOOKS();
+  });
 
   return {
     books,

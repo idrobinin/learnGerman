@@ -1,3 +1,6 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore/lite";
+
 export const firebaseConfig = {
   apiKey: "AIzaSyB5L7wgYWTaPAVEBaUqFjfcF4pwla_IDpw",
   authDomain: "learn-german-8bfa3.firebaseapp.com",
@@ -6,3 +9,6 @@ export const firebaseConfig = {
   messagingSenderId: "283781620885",
   appId: "1:283781620885:web:f71c4db49d07700ac5a79c",
 };
+
+const firebaseApp = initializeApp(firebaseConfig);
+export const db = getFirestore(firebaseApp);
