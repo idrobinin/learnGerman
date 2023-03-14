@@ -3,10 +3,7 @@
     <v-container fluid class="hidden-sm-and-down">
       <v-layout class="d-flex">
         <v-col sm="4" lg="3">
-          <v-img
-            src="https://upload.wikimedia.org/wikipedia/id/thumb/2/21/Daniel_Radcliffe_di_film_Harry_Potter_and_The_Order_of_Phoenix.jpg/640px-Daniel_Radcliffe_di_film_Harry_Potter_and_The_Order_of_Phoenix.jpg"
-            height="255"
-          ></v-img>
+          <v-img :src="book.imageUrl" height="255"></v-img>
           <div class="text-center text-subtitle-1 mt-2">
             <v-btn color="primary" rounded="lg">
               <v-icon
@@ -63,10 +60,7 @@
     <v-container fluid class="hidden-md-and-up">
       <v-layout class="d-flex flex-wrap">
         <v-col>
-          <v-img
-            src="https://upload.wikimedia.org/wikipedia/id/thumb/2/21/Daniel_Radcliffe_di_film_Harry_Potter_and_The_Order_of_Phoenix.jpg/640px-Daniel_Radcliffe_di_film_Harry_Potter_and_The_Order_of_Phoenix.jpg"
-            height="255"
-          ></v-img>
+          <v-img :src="book.imageUrl" height="255"></v-img>
           <div class="text-center text-subtitle-1 mt-2">
             <v-btn color="primary" rounded="lg">
               <v-icon
