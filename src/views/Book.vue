@@ -1,21 +1,21 @@
 <template>
-  <div v-if="!getBook">
+  <div v-if="!getBookByBookId">
     <E404 />
   </div>
   <div v-else>
     <v-container>
       <v-layout class="d-flex flex-wrap flex-column">
         <v-col sm="12" md="10" offset-md="1">
-          <book-details class="w-100" :book="getBook" />
+          <book-details class="w-100" :book="getBookByBookId" />
         </v-col>
         <v-col
-          v-for="part in getBook.parts"
+          v-for="part in getBookByBookId.parts"
           :key="part.id"
           sm="12"
           md="10"
           offset-md="1 "
         >
-          <book-part-list-item :part="part" :bookId="getBook.id" />
+          <book-part-list-item :part="part" :bookId="getBookByBookId.id" />
         </v-col>
       </v-layout>
     </v-container>
@@ -28,7 +28,7 @@ import BookDetails from "@/components/BookDetails.vue";
 import BookPartListItem from "@/components/BookPartListItem.vue";
 import { useBooksStore } from "@/store/booksStore";
 import { useRoute } from "vue-router";
-import { getBook } from "@/hooks/getBook";
+import { getBookByBookId } from "@/hooks/getBookByBookId";
 
 const bookStore = useBooksStore();
 const route = useRoute();
