@@ -28,12 +28,12 @@ import BookDetails from "@/components/BookDetails.vue";
 import BookPartListItem from "@/components/BookPartListItem.vue";
 import { useBooksStore } from "@/store/booksStore";
 import { useRoute } from "vue-router";
-import { useBook } from "@/hooks/useBook";
+import { getBook } from "@/hooks/getBook";
 
 const bookStore = useBooksStore();
 const route = useRoute();
 
 // получаем книгу для отрисовки
 
-const { getBook } = useBook(route.params.id, bookStore.books);
+const { getBook } = getBook(route.params.id, bookStore.books);
 </script>

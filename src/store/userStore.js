@@ -13,6 +13,7 @@ export const useUserStore = defineStore("userStore", () => {
   // user
   const user = ref({
     isAuthenticated: false,
+    uid: null,
   });
 
   const mainStore = useMainStore();
@@ -87,7 +88,11 @@ export const useUserStore = defineStore("userStore", () => {
   // получаем залогинен ли юзер
   const isUserAuthenticated = computed(() => user.value.isAuthenticated);
 
-  // смотрим залогинен ли юзер
+  // геттер для юзер ID
+
+  const userId = computed(() => user.value.uid);
+
+  // смотрим залогинен ли юзер и оставляем его на сайте
   watch(
     () => user.value.isAuthenticated,
     (newVal) => {
@@ -105,5 +110,6 @@ export const useUserStore = defineStore("userStore", () => {
     isUserAuthenticated,
     showSignoutDialog,
     user,
+    userId,
   };
 });

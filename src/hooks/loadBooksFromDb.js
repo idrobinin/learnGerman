@@ -1,6 +1,6 @@
 // функция загрузки книг из БД
 
-import { collection, getDocs, where, query } from "firebase/firestore/lite";
+import { collection, getDocs } from "firebase/firestore/lite";
 import { db } from "@/config/firebase";
 
 export const LOAD_BOOKS = async (books) => {

@@ -1,8 +1,9 @@
 import { collection, getDocs } from "firebase/firestore/lite";
 import { db } from "@/config/firebase";
 
-// функция для загрузки всех частей со всем данными книг
+// функция для загрузки всех частей со всеми данными книг
 //  не используется
+
 export const LOAD_BOOKPARTS = async (bookParts) => {
   try {
     const querySnapshot = await getDocs(collection(db, "bookParts"));

@@ -45,13 +45,14 @@
               <span> ({{ book.ratingsCount }}) </span>
             </div>
             <v-spacer></v-spacer>
-            <router-link
-              style="width: 100px"
+            <v-btn
+              style="min-width: 100px"
               class="text-decoration-none px-4 py-2 text-center text-blue rounded-lg bg-yellow d-block"
               rounded="lg"
-              :to="{ name: 'books' }"
-              >Back
-            </router-link>
+              :disabled="!canLoadBook(book.id)"
+              @click.prevent="loadBook(book.id)"
+              >Загрузить
+            </v-btn>
           </v-card-actions>
         </v-col>
       </v-layout>
@@ -104,13 +105,14 @@
               <span>({{ book.ratingsCount }})</span>
             </div>
             <v-spacer></v-spacer>
-            <router-link
-              style="width: 100px"
+            <v-btn
+              style="min-width: 100px"
               class="text-decoration-none px-4 py-2 mt-3 text-center text-blue rounded-lg bg-yellow d-block"
               rounded="lg"
-              :to="{ name: 'books' }"
-              >Back
-            </router-link>
+              @click.prevent="loadBook(book.id)"
+              :disabled="!canLoadBook(book.id)"
+              >Загрузить
+            </v-btn>
           </v-card-actions>
         </v-col>
       </v-layout>
@@ -120,7 +122,35 @@
 
 <script setup>
 import { useBookLevel } from "@/hooks/useBookLevel";
+import { useUserStore } from "@/store/userStore";
+import { useMainStore } from "@/store/mainStore";
+import { useUserDataStore } from "@/store/userDataStore";
+
 const { getBookLevel } = useBookLevel();
+const userStore = useUserStore();
+const mainStore = useMainStore();
+const userDataStore = useUserDataStore();
+
+const isUserAuthenticated = userStore.isUserAuthenticated;
+const getProcessing = mainStore.getProcessing;
+
+// отрабатывает если есть книга в базе юзера + он аутентифицирован + нет процессов
+const canLoadBook = (id) => {
+  let book = getUserDataBook(id);
+  return getProcessing === false && isUserAuthenticated && !book;
+};
+
+// проверяем данные по наличию книги в списке загруженных у юзера по id книги
+const getUserDataBook = (id) => {
+  if (userDataStore.userData.books && userDataStore.userData.books[id]) {
+    return userDataStore.userData.books[id];
+  }
+};
+
+// функция добавления книги юзером в свой профайл
+const loadBook = (bookId) => {
+  userDataStore.ADD_USER_BOOK(bookId);
+};
 
 defineProps({
   book: {

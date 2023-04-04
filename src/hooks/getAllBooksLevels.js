@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 
 // получаем все уровни языка книг в один массив
-export function useBooksLevels(books) {
+export function getAllBooksLevels(books) {
   const levels = ref([]);
   const booksLevelsList = computed(() => {
     books.forEach((el) => {

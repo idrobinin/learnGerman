@@ -58,13 +58,13 @@
 import { useBooksStore } from "@/store/booksStore";
 import { useFilteredBooks } from "@/hooks/useFilteredBooks";
 import { useSortedAndFilteredBooks } from "@/hooks/useSortedAndFilteredBooks";
-import { useBooksLevels } from "@/hooks/useBooksLevels";
+import { getAllBooksLevels } from "@/hooks/getAllBooksLevels";
 import BooksListItem from "@/components/BooksListItem.vue";
 
 const bookStore = useBooksStore();
 
 //  список доступных уровней языка для чтения
-const { booksLevelsList } = useBooksLevels(bookStore.books);
+const { booksLevelsList } = getAllBooksLevels(bookStore.books);
 
 // список отфильтрованных книг по нескольким параметрам на выбор
 const { searchQuery, filteredBooks } = useFilteredBooks(bookStore.books);
