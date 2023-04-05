@@ -14,7 +14,10 @@ export const useUserDataStore = defineStore("userDataStore", () => {
   const mainStore = useMainStore();
   const userStore = useUserStore();
 
-  let userData = ref({});
+  let userData = ref({
+    books: {},
+    words: {},
+  });
   // функция
   const SET_USER_DATA = (data) => {
     userData.value = data;
@@ -33,6 +36,14 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         if (!fetchedUserData.books) {
           fetchedUserData.books = {};
         }
+        // конвертируем TimeStamp Firestore в нормальный вид даты
+        for (let key in fetchedUserData.books) {
+          if (fetchedUserData.books.hasOwnProperty(key)) {
+            fetchedUserData.books[key].addedDate =
+              fetchedUserData.books[key].addedDate.toDate();
+          }
+        }
+
         SET_USER_DATA(fetchedUserData);
         mainStore.SET_PROCESSING(false);
       }

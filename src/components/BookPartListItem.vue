@@ -6,6 +6,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <router-link
+        v-if="isUserBookLoaded"
         style="width: 100px"
         class="text-decoration-none px-4 py-2 bg-yellow text-center text-blue rounded-lg"
         :to="{
@@ -19,7 +20,19 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from "vue";
+import { useUserDataStore } from "@/store/userDataStore";
+import { useUserStore } from "@/store/userStore";
+import { useMainStore } from "@/store/mainStore";
+
+const userStore = useUserStore();
+const mainStore = useMainStore();
+const userDataStore = useUserDataStore();
+
+const isUserAuthenticated = userStore.isUserAuthenticated;
+const getProcessing = mainStore.getProcessing;
+
+const props = defineProps({
   part: {
     type: Object,
     required: true,
@@ -29,5 +42,14 @@ defineProps({
     type: String,
     required: true,
   },
+});
+
+// проверка загружена ли книга в БД профайл пользователя
+const isUserBookLoaded = computed(() => {
+  return (
+    isUserAuthenticated &&
+    !getProcessing &&
+    !!userDataStore.userData.books[props.bookId]
+  );
 });
 </script>

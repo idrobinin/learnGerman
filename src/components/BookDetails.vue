@@ -45,7 +45,12 @@
               <span> ({{ book.ratingsCount }}) </span>
             </div>
             <v-spacer></v-spacer>
+            <div v-if="getUserDataBook(book.id)" class="d-flex align-center">
+              <v-icon size="large" class="mr-2" icon="mdi-home"> </v-icon>
+              <p>Книга загружена</p>
+            </div>
             <v-btn
+              v-else
               style="min-width: 100px"
               class="text-decoration-none px-4 py-2 text-center text-blue rounded-lg bg-yellow d-block"
               rounded="lg"
@@ -105,7 +110,12 @@
               <span>({{ book.ratingsCount }})</span>
             </div>
             <v-spacer></v-spacer>
+            <div v-if="getUserDataBook(book.id)" class="d-flex align-center">
+              <v-icon size="large" class="mr-2" icon="mdi-home"> </v-icon>
+              <p>Книга загружена</p>
+            </div>
             <v-btn
+              v-else
               style="min-width: 100px"
               class="text-decoration-none px-4 py-2 mt-3 text-center text-blue rounded-lg bg-yellow d-block"
               rounded="lg"
@@ -140,7 +150,7 @@ const canLoadBook = (id) => {
   return getProcessing === false && isUserAuthenticated && !book;
 };
 
-// проверяем данные по наличию книги в списке загруженных у юзера по id книги
+// проверяем данные по наличию книги в списке загруженных у юзера в профайл в БД по id книги
 const getUserDataBook = (id) => {
   if (userDataStore.userData.books && userDataStore.userData.books[id]) {
     return userDataStore.userData.books[id];
@@ -148,9 +158,11 @@ const getUserDataBook = (id) => {
 };
 
 // функция добавления книги юзером в свой профайл
-const loadBook = (bookId) => {
-  userDataStore.ADD_USER_BOOK(bookId);
+const loadBook = (id) => {
+  userDataStore.ADD_USER_BOOK(id);
 };
+
+// получаем дату добавления книги
 
 defineProps({
   book: {

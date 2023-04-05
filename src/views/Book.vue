@@ -1,21 +1,21 @@
 <template>
-  <div v-if="!getBookByBookId">
+  <div v-if="!getBook">
     <E404 />
   </div>
   <div v-else>
     <v-container>
       <v-layout class="d-flex flex-wrap flex-column">
         <v-col sm="12" md="10" offset-md="1">
-          <book-details class="w-100" :book="getBookByBookId" />
+          <book-details class="w-100" :book="getBook" />
         </v-col>
         <v-col
-          v-for="part in getBookByBookId.parts"
+          v-for="part in getBook.parts"
           :key="part.id"
           sm="12"
           md="10"
           offset-md="1 "
         >
-          <book-part-list-item :part="part" :bookId="getBookByBookId.id" />
+          <book-part-list-item :part="part" :bookId="getBook.id" />
         </v-col>
       </v-layout>
     </v-container>
@@ -35,5 +35,5 @@ const route = useRoute();
 
 // получаем книгу для отрисовки
 
-const { getBook } = getBook(route.params.id, bookStore.books);
+const { getBook } = getBookByBookId(route.params.id, bookStore.books);
 </script>
