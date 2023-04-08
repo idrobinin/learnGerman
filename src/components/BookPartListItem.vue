@@ -13,6 +13,7 @@
           name: 'bookPart',
           params: { bookId: bookId, partId: part.id },
         }"
+        @click="userDataStore.UPDATE_USER_BOOK_PART_STATS(bookId, part.id)"
         >Открыть
       </router-link>
     </v-card-actions>
@@ -43,6 +44,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+const add = () => {
+  console.log(456);
+};
 
 // проверка загружена ли книга в БД профайл пользователя
 const isUserBookLoaded = computed(() => {

@@ -16,9 +16,9 @@ export const LOAD_PART = async (partToRender, book, bookPart) => {
       const data = doc.data();
 
       partToRender.value = data;
-
-      return partToRender;
     });
+
+    return partToRender;
   } catch (error) {
     console.log(error);
   }

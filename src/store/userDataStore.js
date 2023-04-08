@@ -2,7 +2,13 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useMainStore } from "@/store/mainStore";
 import { useUserStore } from "@/store/userStore";
-import { doc, getDoc, setDoc } from "firebase/firestore/lite";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  Timestamp,
+} from "firebase/firestore/lite";
 import { db } from "@/config/firebase";
 
 const defaultUserData = {
@@ -85,5 +91,39 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     userData.value = docSnap.data();
   };
 
-  return { userData, LOAD_USER_DATA, SET_USER_DATA, ADD_USER_BOOK };
+  // функция добавления и изменения статистики в БД по частям каждой книги юзера
+  const UPDATE_USER_BOOK_PART_STATS = async (bookId, partId) => {
+    const userStore = useUserStore();
+    try {
+      const docRef = doc(db, "userData", `${userStore.userId}`);
+
+      // если данная часть книги не открывалась, то добавляем дату открытия addedDate
+      if (!userData.value.books[bookId].parts[partId]) {
+        await updateDoc(docRef, {
+          [`books.${bookId}.parts.${partId}.addedDate`]: Timestamp.fromDate(
+            new Date()
+          ),
+        });
+      }
+      //  добавляем новое свойство lastOpenedDate
+      await updateDoc(docRef, {
+        [`books.${bookId}.parts.${partId}.lastOpenedDate`]: Timestamp.fromDate(
+          new Date()
+        ),
+      });
+
+      // записываем все изменения в наш Vue oбъект userData
+      await getDocSnap(userStore.userId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return {
+    userData,
+    LOAD_USER_DATA,
+    SET_USER_DATA,
+    ADD_USER_BOOK,
+    UPDATE_USER_BOOK_PART_STATS,
+  };
 });
