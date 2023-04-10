@@ -1,10 +1,15 @@
 <template>
-  <v-card color="blue-lighten-1" class="text-white">
-    <v-card-title class="text-h4 text-center">{{ part.title }}</v-card-title>
-    {{ part }}
-
+  <v-card color="blue-lighten-1" class="text-white d-flex align-center">
+    <v-card-title class="text-h4 text-center">
+      <v-icon
+        v-if="finishedDate"
+        icon="mdi-check"
+        color="yellow"
+        size="large"
+      />{{ part.title }}</v-card-title
+    >
+    <v-spacer />
     <v-card-actions>
-      <v-spacer></v-spacer>
       <router-link
         v-if="isUserBookLoaded"
         style="width: 100px"
@@ -45,16 +50,21 @@ const props = defineProps({
   },
 });
 
-const add = () => {
-  console.log(456);
-};
-
-// проверка загружена ли книга в БД профайл пользователя
+// проверка загружена ли книга в БД профайл пользователя для отображения кнопки
 const isUserBookLoaded = computed(() => {
   return (
     isUserAuthenticated &&
     !getProcessing &&
     !!userDataStore.userData.books[props.bookId]
   );
+});
+
+//если книга загружена и есть чать книги по айди этой части, то возвращаем закончена ли работа с частью для отображения CHECK ICON
+const finishedDate = computed(() => {
+  if (!isUserBookLoaded.value) return false;
+  let book = userDataStore.userData.books[props.bookId];
+  if (book && book.parts[props.part.id]) {
+    return book.parts[props.part.id].finishedDate;
+  }
 });
 </script>

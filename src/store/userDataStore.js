@@ -93,7 +93,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
 
   // функция добавления и изменения статистики в БД по частям каждой книги юзера
   const UPDATE_USER_BOOK_PART_STATS = async (bookId, partId) => {
-    const userStore = useUserStore();
     try {
       const docRef = doc(db, "userData", `${userStore.userId}`);
 
@@ -119,11 +118,32 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     }
   };
 
+  // функция завершения работы с частью книги которая записывает рейтин и дату завершения в БД
+  const FINISH_USER_BOOK_PART = async (bookId, partId, rating) => {
+    try {
+      const docRef = doc(db, "userData", `${userStore.userId}`);
+
+      //  добавляем новое свойство finishedDate и выставленный рейтинг пользователем по окончании работы с частью книги
+      await updateDoc(docRef, {
+        [`books.${bookId}.parts.${partId}.finishedDate`]: Timestamp.fromDate(
+          new Date()
+        ),
+        [`books.${bookId}.parts.${partId}.rating`]: rating,
+      });
+
+      // записываем все изменения в наш Vue oбъект userData
+      await getDocSnap(userStore.userId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     userData,
     LOAD_USER_DATA,
     SET_USER_DATA,
     ADD_USER_BOOK,
     UPDATE_USER_BOOK_PART_STATS,
+    FINISH_USER_BOOK_PART,
   };
 });
