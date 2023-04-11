@@ -30,13 +30,13 @@
 
 <script setup>
 import { ref } from "vue";
-const dialog = ref(true);
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "vue-router";
 const userStore = useUserStore();
 
 const router = useRouter();
 
+const dialog = ref(true);
 const confirmSignOut = () => {
   userStore.SIGN_OUT();
   dialog.value = false;

@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { useMainStore } from "@/store/mainStore";
 import { useRouter } from "vue-router";
@@ -31,21 +32,33 @@ export const useUserStore = defineStore("userStore", () => {
   const showSignoutDialog = ref(false);
 
   //  функция регистрации юзера
-  const SIGNUP = (email, password) => {
+  const SIGNUP = (email, password, name) => {
     mainStore.CLEAR_ERROR();
     mainStore.SET_PROCESSING(true);
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
+        const user = auth.currentUser;
+
+        // добавляем введенное пользователем имя в БД
+        updateProfile(user, {
+          displayName: name,
+        })
+          .then(() => {
+            mainStore.SET_PROCESSING(false);
+          })
+          .catch((error) => {
+            console.error(error);
+            mainStore.SET_PROCESSING(false);
+            mainStore.SET_ERROR(error.message);
+          });
 
         SET_USER(userCredential.user);
-
         mainStore.SET_PROCESSING(false);
       })
       .catch((error) => {
-        const errorMessage = error.message;
+        console.error(error);
         mainStore.SET_PROCESSING(false);
-        mainStore.SET_ERROR(errorMessage);
+        mainStore.SET_ERROR(error.message);
       });
   };
 
@@ -82,6 +95,7 @@ export const useUserStore = defineStore("userStore", () => {
         mainStore.SET_PROCESSING(false);
         mainStore.SET_ERROR(errorMessage);
       });
+    mainStore.SET_PROCESSING(false);
     showSignoutDialog.value = true;
   };
 

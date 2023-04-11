@@ -40,7 +40,7 @@
         :disabled="!valid || !checkbox || processing"
         color="success"
         class="mr-4"
-        @click.prevent="userStore.SIGNUP(email, password)"
+        @click.prevent="userStore.SIGNUP(email, password, name)"
       >
         Зарегистрироваться
       </v-btn>
