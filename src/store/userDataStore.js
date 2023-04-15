@@ -91,25 +91,23 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     userData.value = docSnap.data();
   };
 
-  // функция добавления и изменения статистики в БД по частям каждой книги юзера
+  // функция добавления и изменения статистики (дата добавления и последнего открытия) в БД по частям каждой книги юзера
   const UPDATE_USER_BOOK_PART_STATS = async (bookId, partId) => {
     try {
       const docRef = doc(db, "userData", `${userStore.userId}`);
 
       // если данная часть книги не открывалась, то добавляем дату открытия addedDate
+      const updatedFields = {};
       if (!userData.value.books[bookId].parts[partId]) {
-        await updateDoc(docRef, {
-          [`books.${bookId}.parts.${partId}.addedDate`]: Timestamp.fromDate(
-            new Date()
-          ),
-        });
+        updatedFields[`books.${bookId}.parts.${partId}.addedDate`] =
+          Timestamp.fromDate(new Date());
       }
-      //  добавляем новое свойство lastOpenedDate
-      await updateDoc(docRef, {
-        [`books.${bookId}.parts.${partId}.lastOpenedDate`]: Timestamp.fromDate(
-          new Date()
-        ),
-      });
+      // добавляем новое свойство lastOpenedDate
+      updatedFields[`books.${bookId}.parts.${partId}.lastOpenedDate`] =
+        Timestamp.fromDate(new Date());
+
+      // Обновляем все поля в одном вызове метода updateDoc()
+      await updateDoc(docRef, updatedFields);
 
       // записываем все изменения в наш Vue oбъект userData
       await getDocSnap(userStore.userId);
@@ -124,12 +122,15 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       const docRef = doc(db, "userData", `${userStore.userId}`);
 
       //  добавляем новое свойство finishedDate и выставленный рейтинг пользователем по окончании работы с частью книги
-      await updateDoc(docRef, {
+
+      const updatedFields = {
         [`books.${bookId}.parts.${partId}.finishedDate`]: Timestamp.fromDate(
           new Date()
         ),
         [`books.${bookId}.parts.${partId}.rating`]: rating,
-      });
+      };
+
+      await updateDoc(docRef, updatedFields);
 
       // записываем все изменения в наш Vue oбъект userData
       await getDocSnap(userStore.userId);

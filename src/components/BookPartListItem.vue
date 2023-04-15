@@ -63,8 +63,7 @@ const isUserBookLoaded = computed(() => {
 const finishedDate = computed(() => {
   if (!isUserBookLoaded.value) return false;
   let book = userDataStore.userData.books[props.bookId];
-  if (book && book.parts[props.part.id]) {
-    return book.parts[props.part.id].finishedDate;
-  }
+
+  return book?.parts[props.part.id]?.finishedDate;
 });
 </script>

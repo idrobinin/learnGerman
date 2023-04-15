@@ -76,7 +76,7 @@ const bookPart = ref(null);
 // модель для диалогового окна завершающего работу с книгой
 const finishDialog = ref(false);
 
-// функция для диалогового окна по завершению работы с книгой
+// функция для диалогового окна выполняющая завершение работы с книгой
 const finishWork = () => {
   finishDialog.value = false;
   return userDataStore.FINISH_USER_BOOK_PART(

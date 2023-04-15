@@ -6,12 +6,8 @@ import { useUserDataStore } from "@/store/userDataStore";
 export function getFinishedDateOfBookPart(bookId, partId) {
   const finishedDateOfBookPart = computed(() => {
     const userDataStore = useUserDataStore();
-    if (
-      userDataStore.userData.books[bookId] &&
-      userDataStore.userData.books[bookId].parts[partId]
-    ) {
-      return userDataStore.userData.books[bookId].parts[partId].finishedDate;
-    }
+
+    return userDataStore.userData.books[bookId]?.parts[partId]?.finishedDate;
   });
 
   return { finishedDateOfBookPart };
