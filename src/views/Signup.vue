@@ -31,7 +31,7 @@
 
       <v-checkbox
         v-model="checkbox"
-        :rules="[(v) => !!v || 'You must agree to continue!']"
+        :rules="checkboxRules"
         label="Подтвердить"
         required
       ></v-checkbox>
@@ -61,7 +61,10 @@ const userStore = useUserStore();
 const mainStore = useMainStore();
 
 const valid = ref(true);
+
+// CHECKBOX CONFIRMATION
 const checkbox = ref(false);
+const checkboxRules = [(v) => !!v || "You must agree to continue!"];
 
 // NAME
 const name = ref("");

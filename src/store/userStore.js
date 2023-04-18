@@ -8,7 +8,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { useMainStore } from "@/store/mainStore";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
 
 export const useUserStore = defineStore("userStore", () => {
   // user
@@ -19,7 +19,6 @@ export const useUserStore = defineStore("userStore", () => {
 
   const mainStore = useMainStore();
   const router = useRouter();
-
   const auth = getAuth();
 
   // функция записи юзера в стор
@@ -31,6 +30,9 @@ export const useUserStore = defineStore("userStore", () => {
   // модель окна подтверждения выхода юзера из аккаунта
   const showSignoutDialog = ref(false);
 
+  // модель для диалогового окна для изменения данных пользователя
+  const showChangeUserDataDialog = ref(false);
+
   //  функция регистрации юзера
   const SIGNUP = (email, password, name) => {
     mainStore.CLEAR_ERROR();
@@ -39,7 +41,7 @@ export const useUserStore = defineStore("userStore", () => {
       .then((userCredential) => {
         const user = auth.currentUser;
 
-        // добавляем введенное пользователем имя в БД
+        // добавляем введенное пользователем при гегистрации имя в БД
         updateProfile(user, {
           displayName: name,
         })
@@ -103,7 +105,6 @@ export const useUserStore = defineStore("userStore", () => {
   const isUserAuthenticated = computed(() => user.value.isAuthenticated);
 
   // геттер для юзер ID
-
   const userId = computed(() => user.value.uid);
 
   // смотрим залогинен ли юзер и оставляем его на сайте
@@ -111,7 +112,7 @@ export const useUserStore = defineStore("userStore", () => {
     () => user.value.isAuthenticated,
     (newVal) => {
       if (newVal) {
-        router.push({ name: "books" });
+        router.push({ name: "profile" });
       }
     }
   );
@@ -123,6 +124,7 @@ export const useUserStore = defineStore("userStore", () => {
     SIGN_OUT,
     isUserAuthenticated,
     showSignoutDialog,
+    showChangeUserDataDialog,
     user,
     userId,
   };

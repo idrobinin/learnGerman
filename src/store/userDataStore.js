@@ -39,6 +39,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       // проверяем есть ли коллекция у данного юзера в базе по ID юзера
       if (docSnap.exists()) {
         let fetchedUserData = docSnap.data() || defaultUserData;
+
         if (!fetchedUserData.books) {
           fetchedUserData.books = {};
         }

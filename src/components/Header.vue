@@ -68,14 +68,10 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useUserStore } from "@/store/userStore";
-import ConfirmationDialog from "@/components/ConfirmationDialog";
-import { authUser } from "@/config/authUser";
+import ConfirmationDialog from "@/components/ExitConfirmationDialog.vue";
 
 // модель для отображения мобильного или веб меню
 const drawer = ref(false);
-
-// следим за изменением  стейта юзера
-authUser.setup();
 
 // модель окна подтверждения выхода юзера из аккаунта
 const showSignoutDialog = computed(() => userStore.showSignoutDialog);
@@ -92,11 +88,6 @@ const menuItems = computed(() => {
           route: "books",
           icon: "mdi-eye",
         },
-        // {
-        //   title: "Книга",
-        //   route: "book",
-        //   icon: "mdi-puzzle-outline",
-        // },
         {
           title: "Мой кабинет",
           route: "profile",

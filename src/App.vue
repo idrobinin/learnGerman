@@ -11,4 +11,8 @@
 <script setup lang="ts">
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
+import { authUser } from "@/config/authUser";
+
+// следим за изменением  стейта юзера
+authUser.setup();
 </script>

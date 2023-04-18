@@ -188,7 +188,7 @@ const decrementFontSize = () => {
 // заполняем массив ключей для функции показывающей перевод текста уникальными ключами (номер параграфа + номер предложения)
 // и добавляем каждому элементу бул флаг
 onBeforeMount(() => {
-  const content = props.part.content;
+  const content = props.part?.content;
   for (let i = 0; i < content.length; i++) {
     for (let y = 0; y < content[i].sentences.length; y++) {
       visibilityKeys.value.push({
