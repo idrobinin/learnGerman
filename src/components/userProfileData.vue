@@ -1,5 +1,6 @@
 <template>
   <change-user-data-dialog v-if="showChangeUserDataDialog" />
+
   <v-card v-else class="mx-auto bg-blue">
     <v-card-text>
       <div>

@@ -60,7 +60,9 @@ import { useMainStore } from "@/store/mainStore";
 const userStore = useUserStore();
 const mainStore = useMainStore();
 
-const valid = ref(true);
+const valid = computed(() => {
+  return !!name.value && !!password.value && !!email.value;
+});
 
 // CHECKBOX CONFIRMATION
 const checkbox = ref(false);
