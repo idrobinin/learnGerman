@@ -2,9 +2,6 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" max-width="1024" persistent>
       <v-card>
-        <v-card-title>
-          <span class="text-h5">User Profile</span>
-        </v-card-title>
         <v-card-text>
           <v-container>
             <v-row>
@@ -17,7 +14,7 @@
                     :rules="nameRules"
                     label="Name"
                     required
-                  ></v-text-field>
+                  />
 
                   <v-text-field
                     type="email"
@@ -25,7 +22,7 @@
                     :rules="emailRules"
                     label="E-mail"
                     required
-                  ></v-text-field>
+                  />
 
                   <v-text-field
                     type="password"
@@ -33,23 +30,46 @@
                     :rules="passRules"
                     label="Password"
                     required
-                  ></v-text-field>
-
-                  <v-checkbox
-                    v-model="checkbox"
-                    :rules="checkboxRules"
-                    label="Подтвердить"
-                    required
-                  ></v-checkbox>
+                  />
 
                   <v-alert v-if="error" closable class="mt-7" type="warning">{{
                     error
                   }}</v-alert>
                 </v-form>
+                <div class="text-h5 mb-3">Я хочу изменить</div>
+                <v-radio-group v-model="changeType">
+                  <v-radio label="Имя" value="name" />
+                  <v-text-field
+                    v-if="changeType === 'name'"
+                    type="text"
+                    v-model="newName"
+                    :counter="10"
+                    :rules="nameRules"
+                    label="Name"
+                    required
+                  />
+                  <v-radio label="Почта" value="email" />
+                  <v-text-field
+                    v-if="changeType === 'email'"
+                    type="email"
+                    v-model="newEmail"
+                    :rules="emailRules"
+                    label="E-mail"
+                    required
+                  />
+                  <v-radio label="Пароль" value="password" />
+                  <v-text-field
+                    v-if="changeType === 'password'"
+                    type="password"
+                    v-model="newPassword"
+                    :rules="passRules"
+                    label="Password"
+                    required
+                  />
+                </v-radio-group>
               </v-col>
             </v-row>
           </v-container>
-          <small>*обязательно к заполнению</small>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -59,10 +79,9 @@
             @click.prevent="changeUserData()"
           >
             Закрыть
-            {{ valid }}
           </v-btn>
           <v-btn
-            :disabled="!valid || !checkbox || processing"
+            :disabled="!valid || processing"
             color="blue-darken-1"
             variant="text"
             @click.prevent="unconfirmChangingUserData()"
@@ -88,10 +107,6 @@ const valid = computed(() => {
   return !!name.value && !!password.value && !!email.value;
 });
 
-// CHECKBOX CONFIRMATION
-const checkbox = ref(false);
-const checkboxRules = [(v) => !!v || "You must agree to continue!"];
-
 // NAME
 const name = ref("");
 const nameRules = [
@@ -111,6 +126,13 @@ const emailRules = [
   (v) => !!v || "E-mail is required",
   (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ];
+
+// new Data to change
+
+const newName = ref("");
+const newEmail = ref("");
+const newPassword = ref("");
+const changeType = ref("name");
 
 // фикс ошибки
 const error = computed(() => mainStore.getError);
