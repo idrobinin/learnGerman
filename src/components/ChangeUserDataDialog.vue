@@ -1,21 +1,13 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" max-width="1024" persistent>
-      <v-card>
+    <v-dialog v-model="dialogModel" max-width="800" persistent>
+      <v-card class="pa-2">
         <v-card-text>
           <v-container>
             <v-row>
               <v-col cols="12">
                 <v-form ref="form" v-model="valid" lazy-validation>
-                  <v-text-field
-                    type="text"
-                    v-model="name"
-                    :counter="10"
-                    :rules="nameRules"
-                    label="Name"
-                    required
-                  />
-
+                  <h4 class="mb-5">Подтвердите данные</h4>
                   <v-text-field
                     type="email"
                     v-model="email"
@@ -32,63 +24,64 @@
                     required
                   />
 
-                  <v-alert v-if="error" closable class="mt-7" type="warning">{{
-                    error
-                  }}</v-alert>
+                  <h4 class="mb-3">Я хочу изменить</h4>
+                  <v-radio-group v-model="changeType">
+                    <v-radio label="Имя" value="name" />
+                    <v-text-field
+                      v-if="changeType === 'name'"
+                      type="text"
+                      v-model="newName"
+                      :counter="10"
+                      :rules="nameRules"
+                      label="new Name"
+                      required
+                    />
+                    <v-radio label="Почта" value="email" />
+                    <v-text-field
+                      v-if="changeType === 'email'"
+                      type="email"
+                      v-model="newEmail"
+                      :rules="emailRules"
+                      label="new E-mail"
+                      required
+                    />
+                    <v-radio label="Пароль" value="password" />
+                    <v-text-field
+                      v-if="changeType === 'password'"
+                      type="password"
+                      v-model="newPassword"
+                      :rules="passRules"
+                      label="new Password"
+                      required
+                    />
+                  </v-radio-group>
                 </v-form>
-                <div class="text-h5 mb-3">Я хочу изменить</div>
-                <v-radio-group v-model="changeType">
-                  <v-radio label="Имя" value="name" />
-                  <v-text-field
-                    v-if="changeType === 'name'"
-                    type="text"
-                    v-model="newName"
-                    :counter="10"
-                    :rules="nameRules"
-                    label="Name"
-                    required
-                  />
-                  <v-radio label="Почта" value="email" />
-                  <v-text-field
-                    v-if="changeType === 'email'"
-                    type="email"
-                    v-model="newEmail"
-                    :rules="emailRules"
-                    label="E-mail"
-                    required
-                  />
-                  <v-radio label="Пароль" value="password" />
-                  <v-text-field
-                    v-if="changeType === 'password'"
-                    type="password"
-                    v-model="newPassword"
-                    :rules="passRules"
-                    label="Password"
-                    required
-                  />
-                </v-radio-group>
               </v-col>
             </v-row>
           </v-container>
         </v-card-text>
+        {{ error }}
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
             color="blue-darken-1"
             variant="text"
-            @click.prevent="changeUserData()"
+            @click.prevent="unconfirmChangingUserData"
           >
-            Закрыть
+            Отмена
           </v-btn>
           <v-btn
             :disabled="!valid || processing"
             color="blue-darken-1"
             variant="text"
-            @click.prevent="unconfirmChangingUserData()"
+            @click.prevent="changeUserData"
           >
-            Подтвердить
+            Изменить
           </v-btn>
         </v-card-actions>
+        <v-alert v-if="error" closable class="mt-7" type="warning">{{
+          error
+        }}</v-alert>
       </v-card>
     </v-dialog>
   </v-row>
@@ -102,13 +95,24 @@ import { useMainStore } from "@/store/mainStore";
 const userStore = useUserStore();
 const mainStore = useMainStore();
 
-const dialog = ref(true);
+const userId = userStore.userId;
+
+// new Data to change
+const newName = ref(null);
+const newEmail = ref(null);
+const newPassword = ref(null);
+const changeType = ref("name");
+
+const dialogModel = ref(true);
 const valid = computed(() => {
-  return !!name.value && !!password.value && !!email.value;
+  return (
+    !!password.value &&
+    !!email.value &&
+    (newPassword.value || newEmail.value || newName.value)
+  );
 });
 
 // NAME
-const name = ref("");
 const nameRules = [
   (v) => !!v || "Name is required",
   (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
@@ -127,25 +131,29 @@ const emailRules = [
   (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ];
 
-// new Data to change
-
-const newName = ref("");
-const newEmail = ref("");
-const newPassword = ref("");
-const changeType = ref("name");
-
 // фикс ошибки
 const error = computed(() => mainStore.getError);
 
 // модель для ongoing процесса регистрации
 const processing = computed(() => mainStore.getProcessing);
 
+// функция изменения данных пользователя
 const changeUserData = () => {
-  dialog.value = false;
+  userStore.CHANGE_USER_DATA_PROFILE(
+    userId,
+    newEmail.value,
+    newName.value,
+    newPassword.value,
+    password.value,
+    email.value
+  );
+  dialogModel.value = false;
   userStore.showChangeUserDataDialog = false;
 };
+
+// функция отмены изменений данных пользователя и закрыть окно
 const unconfirmChangingUserData = () => {
-  dialog.value = false;
+  dialogModel.value = false;
   userStore.showChangeUserDataDialog = false;
 };
 </script>

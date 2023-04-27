@@ -85,7 +85,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     mainStore.SET_PROCESSING(false);
   };
 
-  // функция записи загруженной книги в объект Vue (делаем реактивным так как вью не видит изменения в БД) (берем новые данные в БД и записываем в объект)
+  // функция записи данных в объект Vue (делаем реактивным так как вью не видит изменения в БД) (берем новые данные в БД и записываем в объект)
   const getDocSnap = async (userId) => {
     const docRef = doc(db, "userData", `${userId}`);
     const docSnap = await getDoc(docRef);

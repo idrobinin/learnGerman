@@ -6,9 +6,11 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  updateEmail,
+  updatePassword,
 } from "firebase/auth";
 import { useMainStore } from "@/store/mainStore";
-import { useRouter, useRoute, onBeforeRouteUpdate } from "vue-router";
+import { useRouter } from "vue-router";
 
 export const useUserStore = defineStore("userStore", () => {
   // user
@@ -101,6 +103,55 @@ export const useUserStore = defineStore("userStore", () => {
     showSignoutDialog.value = true;
   };
 
+  // метод для изменения данных юзера в профайле
+  const CHANGE_USER_DATA_PROFILE = async (
+    userId,
+    newEmail,
+    newName,
+    newPassword,
+    currentPassword,
+    currentEmail
+  ) => {
+    mainStore.CLEAR_ERROR();
+    mainStore.SET_PROCESSING(true);
+    const currentUser = auth.currentUser;
+
+    try {
+      // Re-authenticate user with their current email and password
+      const credentials = signInWithEmailAndPassword(
+        auth,
+        currentEmail,
+        currentPassword
+      );
+      await credentials;
+
+      // Update email
+      if (newEmail) {
+        user.value.email = newEmail;
+        await updateEmail(auth.currentUser, newEmail);
+      }
+
+      // Update name
+      if (newName) {
+        user.value.displayName = newName;
+        await updateProfile(currentUser, { displayName: newName });
+      }
+
+      // Update password
+      if (newPassword) {
+        await updatePassword(auth.currentUser, newPassword);
+      }
+
+      console.log("User data updated successfully");
+    } catch (error) {
+      console.error(error);
+      mainStore.SET_ERROR(error);
+      mainStore.SET_PROCESSING(false);
+    }
+
+    mainStore.SET_PROCESSING(false);
+  };
+
   // получаем залогинен ли юзер
   const isUserAuthenticated = computed(() => user.value.isAuthenticated);
 
@@ -122,6 +173,7 @@ export const useUserStore = defineStore("userStore", () => {
     SIGNUP,
     SIGNIN,
     SIGN_OUT,
+    CHANGE_USER_DATA_PROFILE,
     isUserAuthenticated,
     showSignoutDialog,
     showChangeUserDataDialog,

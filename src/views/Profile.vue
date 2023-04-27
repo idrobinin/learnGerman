@@ -30,6 +30,9 @@
 <script setup>
 import { ref } from "vue";
 import UserProfileData from "@/components/userProfileData.vue";
+import { useUserStore } from "@/store/userStore";
+
+const userStore = useUserStore();
 
 // модель для табов
 const tabMode = ref("data");
