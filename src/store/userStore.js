@@ -118,12 +118,7 @@ export const useUserStore = defineStore("userStore", () => {
 
     try {
       // Re-authenticate user with their current email and password
-      const credentials = signInWithEmailAndPassword(
-        auth,
-        currentEmail,
-        currentPassword
-      );
-      await credentials;
+      await signInWithEmailAndPassword(auth, currentEmail, currentPassword);
 
       // Update email
       if (newEmail) {

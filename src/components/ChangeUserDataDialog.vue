@@ -60,7 +60,6 @@
             </v-row>
           </v-container>
         </v-card-text>
-        {{ error }}
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
@@ -138,8 +137,8 @@ const error = computed(() => mainStore.getError);
 const processing = computed(() => mainStore.getProcessing);
 
 // функция изменения данных пользователя
-const changeUserData = () => {
-  userStore.CHANGE_USER_DATA_PROFILE(
+const changeUserData = async () => {
+  await userStore.CHANGE_USER_DATA_PROFILE(
     userId,
     newEmail.value,
     newName.value,
@@ -147,8 +146,11 @@ const changeUserData = () => {
     password.value,
     email.value
   );
-  dialogModel.value = false;
-  userStore.showChangeUserDataDialog = false;
+
+  if (!error.value) {
+    dialogModel.value = false;
+    userStore.showChangeUserDataDialog = false;
+  }
 };
 
 // функция отмены изменений данных пользователя и закрыть окно
