@@ -1,11 +1,16 @@
 <template>
-  <v-container v-if="bookPart">
-    <v-layout class="d-flex flex-wrap">
+  <v-container>
+    <v-layout v-if="bookPart" class="d-flex flex-wrap">
       <v-col sm="12" md="10" offset-md="1">
         <book-part-content :part="bookPart" />
       </v-col>
-      <v-col sm="12" md="10" offset-md="1">
-        <book-part-words :words="bookPart.words" />
+      <v-col
+        v-if="Object.keys(bookPart.words).length"
+        sm="12"
+        md="10"
+        offset-md="1"
+      >
+        <book-part-words :data="bookPart.words" />
       </v-col>
       <v-col sm="12" md="10" offset-md="1" class="text-center">
         <v-btn

@@ -22,6 +22,7 @@
             <v-window-item value="words">Мои слова</v-window-item>
           </v-window>
         </v-card-text>
+        {{ userDataStore.userData }}
       </v-col>
     </v-layout>
   </v-container>
@@ -30,9 +31,9 @@
 <script setup>
 import { ref } from "vue";
 import UserProfileData from "@/components/userProfileData.vue";
-import { useUserStore } from "@/store/userStore";
+import { useUserDataStore } from "@/store/userDataStore";
 
-const userStore = useUserStore();
+const userDataStore = useUserDataStore();
 
 // модель для табов
 const tabMode = ref("data");

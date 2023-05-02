@@ -43,6 +43,9 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         if (!fetchedUserData.books) {
           fetchedUserData.books = {};
         }
+        if (!fetchedUserData.words) {
+          fetchedUserData.words = {};
+        }
         // конвертируем TimeStamp Firestore в нормальный вид даты
         for (let key in fetchedUserData.books) {
           if (fetchedUserData.books.hasOwnProperty(key)) {
