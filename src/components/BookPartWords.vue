@@ -1,37 +1,59 @@
 <template>
-  <v-table class="bg-amber-lighten-5">
-    <thead>
-      <tr>
-        <th class="text-left">Оригинал</th>
-        <th class="text-left">Перевод</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(word, i) in words" :key="`word${i}`">
-        <td style="vertical-align: top">
-          <div class="d-inline-block" style="min-width: 100px">
-            {{ word.origText }}
-          </div>
-          <v-spacer />
-          <div class="my-3 d-flex justify-end">
-            <v-btn icon size="small" class="bg-amber-lighten-5">
-              <span>+</span>
-              <v-tooltip activator="parent" location="bottom"
-                >Добавить</v-tooltip
-              >
-            </v-btn>
-            <v-btn icon size="small" class="bg-amber-lighten-5">
-              <span>-</span>
-              <v-tooltip activator="parent" location="bottom"
-                >Удалить</v-tooltip
-              >
-            </v-btn>
-          </div>
-        </td>
-        <td style="vertical-align: top">{{ word.transText }}</td>
-      </tr>
-    </tbody>
-  </v-table>
+  <v-layout class="hidden-sm-and-down">
+    <v-col class="d-flex flex-wrap justify-space-between">
+      <v-card
+        min-height="200"
+        width="47%"
+        class="bg-amber-lighten-5 my-2 mx-2 d-flex flex-wrap justify-space-between"
+        variant="outlined"
+        v-for="(word, i) in words"
+        :key="`word${i}`"
+      >
+        <div class="d-flex flex-column justify-space-between">
+          <v-card-item>
+            <div>
+              <div class="text-h6 mb-1">{{ word.origText }}</div>
+              <div class="text-caption">
+                {{ word.transText }}
+              </div>
+            </div>
+          </v-card-item>
+
+          <v-card-actions>
+            <v-btn variant="outlined"> Добавить </v-btn>
+          </v-card-actions>
+        </div>
+      </v-card>
+    </v-col>
+  </v-layout>
+
+  <v-layout class="hidden-md-and-up">
+    <v-col class="d-flex flex-wrap justify-space-between">
+      <v-card
+        min-height="200"
+        width="100%"
+        class="bg-amber-lighten-5 my-2 mx-2 d-flex justify-space-between"
+        variant="outlined"
+        v-for="(word, i) in words"
+        :key="`word${i}`"
+      >
+        <div class="d-flex flex-column justify-space-between">
+          <v-card-item>
+            <div>
+              <div class="text-h6 mb-1">{{ word.origText }}</div>
+              <div class="text-caption">
+                {{ word.transText }}
+              </div>
+            </div>
+          </v-card-item>
+
+          <v-card-actions>
+            <v-btn variant="outlined"> Добавить </v-btn>
+          </v-card-actions>
+        </div>
+      </v-card>
+    </v-col>
+  </v-layout>
 </template>
 
 <script setup>
@@ -44,7 +66,7 @@ const props = defineProps({
   },
 });
 
-// получаем слова из данных БД и преобразовываем в массив
+// получаем слова из данных БД (через пропс) и преобразовываем в массив
 const words = computed(() => {
   if (!props.data) return [];
 

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-layout v-if="bookPart" class="d-flex flex-wrap">
+    <v-layout v-if="bookPart" class="d-flex flex-wrap flex-column">
       <v-col sm="12" md="10" offset-md="1">
         <book-part-content :part="bookPart" />
       </v-col>
