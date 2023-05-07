@@ -38,13 +38,10 @@ export const useUserDataStore = defineStore("userDataStore", () => {
 
       // проверяем есть ли коллекция у данного юзера в базе по ID юзера
       if (docSnap.exists()) {
-        let fetchedUserData = docSnap.data() || defaultUserData;
+        let fetchedUserData = docSnap.data();
 
         if (!fetchedUserData.books) {
           fetchedUserData.books = {};
-        }
-        if (!fetchedUserData.words) {
-          fetchedUserData.words = {};
         }
         // конвертируем TimeStamp Firestore в нормальный вид даты
         for (let key in fetchedUserData.books) {
@@ -53,8 +50,11 @@ export const useUserDataStore = defineStore("userDataStore", () => {
               fetchedUserData.books[key].addedDate.toDate();
           }
         }
-
+        if (!fetchedUserData.words) {
+          fetchedUserData.words = {};
+        }
         SET_USER_DATA(fetchedUserData);
+        console.log(fetchedUserData);
         mainStore.SET_PROCESSING(false);
       }
     } catch (error) {
