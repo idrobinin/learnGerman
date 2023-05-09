@@ -22,7 +22,7 @@
             <v-window-item value="words">Мои слова</v-window-item>
           </v-window>
         </v-card-text>
-        {{ userDataStore.userData }}
+        {{ userDataStore.userData.words }}
       </v-col>
     </v-layout>
   </v-container>

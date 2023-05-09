@@ -54,7 +54,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
           fetchedUserData.words = {};
         }
         SET_USER_DATA(fetchedUserData);
-        console.log(fetchedUserData);
         mainStore.SET_PROCESSING(false);
       }
     } catch (error) {
@@ -143,6 +142,37 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     }
   };
 
+  // функция добавления слов/выражений для изучения в профайл пользователя
+
+  const ADD_USER_WORD = async (payload) => {
+    mainStore.SET_PROCESSING(true);
+    // создаем объект книги
+    let word = {
+      origText: payload.origText,
+      transText: payload.transText,
+      type: payload.type,
+      addedDate: new Date(),
+      bucket: 1,
+      nextShowDate: new Date(),
+    };
+
+    if (payload.origArticle) {
+      word.origArticle = payload.origArticle;
+    }
+    await setDoc(
+      doc(db, "userData", `${userStore.userId}`),
+      {
+        words: {
+          [payload.key]: word,
+        },
+      },
+      { merge: true }
+    ).then(() => {
+      getDocSnap(userStore.userId);
+    });
+    mainStore.SET_PROCESSING(false);
+  };
+
   return {
     userData,
     LOAD_USER_DATA,
@@ -150,5 +180,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     ADD_USER_BOOK,
     UPDATE_USER_BOOK_PART_STATS,
     FINISH_USER_BOOK_PART,
+    ADD_USER_WORD,
   };
 });

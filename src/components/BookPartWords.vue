@@ -24,7 +24,13 @@
             </div>
           </v-card-item>
           <v-card-actions>
-            <v-btn variant="outlined" @click="addWord(word)"> Добавить </v-btn>
+            <v-btn
+              variant="outlined"
+              :disabled="processing"
+              @click="addWord(word)"
+            >
+              Добавить
+            </v-btn>
             <v-btn variant="outlined" @click="deleteWord(word)">
               Удалить
             </v-btn>
@@ -32,8 +38,9 @@
               <v-snackbar
                 v-model="snackbar"
                 :timeout="snackbarTimeout"
-                color="warning"
-                class="ma-2"
+                color="orange-lighten-3"
+                rounded="pill"
+                multi-line
               >
                 {{ snackbarText }}
               </v-snackbar>
@@ -45,7 +52,7 @@
   </v-layout>
 
   <!--  для маленьких экранов  -->
-  <v-layout class="hidden-md-and-up">
+  <v-layout class="hidden-md-and-up bg-orange-lighten-1">
     <v-col class="d-flex flex-wrap justify-space-between">
       <v-card
         min-height="200"
@@ -66,7 +73,13 @@
           </v-card-item>
 
           <v-card-actions>
-            <v-btn variant="outlined" @click="addWord(word)"> Добавить </v-btn>
+            <v-btn
+              variant="outlined"
+              :disabled="processing"
+              @click="addWord(word)"
+            >
+              Добавить
+            </v-btn>
             <v-btn variant="outlined" @click="deleteWord(word)">
               Удалить
             </v-btn>
@@ -74,8 +87,9 @@
               <v-snackbar
                 v-model="snackbar"
                 :timeout="snackbarTimeout"
-                color="warning"
-                class="ma-2"
+                color="orange-lighten-3"
+                rounded="pill"
+                multi-line
               >
                 {{ snackbarText }}
               </v-snackbar>
@@ -90,8 +104,12 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useUserDataStore } from "@/store/userDataStore";
+import { useMainStore } from "@/store/mainStore";
 
+const mainStore = useMainStore();
 const userDataStore = useUserDataStore();
+const processing = computed(() => mainStore.getProcessing);
+const checking = ref(false);
 
 const props = defineProps({
   data: {
@@ -124,24 +142,27 @@ const snackbarText = ref("");
 
 // функция добавления слова в профайл юзера
 
-const addWord = (word) => {
-  snackbar.value = true;
-  snackbarText.value = "Уже есть в важем списке";
-  let userWordsList = userDataStore.userData.words;
+const addWord = async (word) => {
+  checking.value = true;
+
+  let userWordsList = userDataStore.userData?.words || null;
+  let wordAdded = null;
+
   if (userWordsList) {
-    let wordAdded = userWordsList[word.key];
-    if (wordAdded) {
-      // проверяем есть ли слово в списке юзера
-      snackbar.value = true;
-      snackbarText.value = "Уже есть в важем списке";
-    } else if (Object.keys(userWordsList).length >= 100) {
-      // проверяем чтобы не было больше 100 слов в списке у юзера
-      snackbar.value = true;
-      snackbarText.value = "Вы не можете добавлять более 100 слов и выражений";
-    } else {
-      // тут логика добавления
-      console.log("что нибудь");
-    }
+    wordAdded = userWordsList[word.key];
   }
+
+  if (wordAdded) {
+    // проверяем есть ли слово в списке юзера
+    snackbar.value = true;
+    snackbarText.value = "Уже есть в важем списке";
+  } else if (userWordsList && Object.keys(userWordsList).length >= 100) {
+    // проверяем чтобы не было больше 100 слов в списке у юзера
+    snackbar.value = true;
+    snackbarText.value = "Вы не можете добавлять более 100 слов и выражений";
+  } else {
+    await userDataStore.ADD_USER_WORD(word);
+  }
+  checking.value = true;
 };
 </script>
