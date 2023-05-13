@@ -171,6 +171,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       getDocSnap(userStore.userId);
     });
     mainStore.SET_PROCESSING(false);
+    await getDocSnap(userStore.userId);
   };
 
   return {

@@ -16,6 +16,7 @@
               <div class="text-h6 mb-1">
                 {{ word?.origArticle }}
                 {{ word.origText }}
+                {{ snackbarText.value }}
               </div>
               <v-divider />
               <div class="text-m">
@@ -26,13 +27,11 @@
           <v-card-actions>
             <v-btn
               variant="outlined"
+              color="primary"
               :disabled="processing"
               @click="addWord(word)"
             >
               Добавить
-            </v-btn>
-            <v-btn variant="outlined" @click="deleteWord(word)">
-              Удалить
             </v-btn>
             <div class="text-center">
               <v-snackbar
@@ -74,13 +73,18 @@
 
           <v-card-actions>
             <v-btn
+              v-if="!word.addedDate"
               variant="outlined"
               :disabled="processing"
               @click="addWord(word)"
             >
               Добавить
             </v-btn>
-            <v-btn variant="outlined" @click="deleteWord(word)">
+            <v-btn
+              v-if="word.addedDate"
+              variant="outlined"
+              @click="deleteWord(word)"
+            >
               Удалить
             </v-btn>
             <div class="text-center">
@@ -162,6 +166,8 @@ const addWord = async (word) => {
     snackbarText.value = "Вы не можете добавлять более 100 слов и выражений";
   } else {
     await userDataStore.ADD_USER_WORD(word);
+    snackbar.value = true;
+    snackbarText.value = "Добавлено";
   }
   checking.value = true;
 };
