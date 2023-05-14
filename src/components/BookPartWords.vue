@@ -12,16 +12,10 @@
       >
         <div class="d-flex flex-column justify-space-between">
           <v-card-item>
-            <div>
-              <div class="text-h6 mb-1">
-                {{ word?.origArticle }}
-                {{ word.origText }}
-                {{ snackbarText.value }}
-              </div>
-              <v-divider />
-              <div class="text-m">
-                {{ word.transText }}
-              </div>
+            <original-word :word="word" />
+            <v-divider />
+            <div class="text-m">
+              {{ word.transText }}
             </div>
           </v-card-item>
           <v-card-actions>
@@ -51,7 +45,7 @@
   </v-layout>
 
   <!--  для маленьких экранов  -->
-  <v-layout class="hidden-md-and-up bg-orange-lighten-1">
+  <v-layout class="hidden-md-and-up">
     <v-col class="d-flex flex-wrap justify-space-between">
       <v-card
         min-height="200"
@@ -63,11 +57,10 @@
       >
         <div class="d-flex flex-column justify-space-between">
           <v-card-item>
-            <div>
-              <div class="text-h6 mb-1">{{ word.origText }}</div>
-              <div class="text-caption">
-                {{ word.transText }}
-              </div>
+            <original-word :word="word" />
+            <v-divider />
+            <div class="text-m">
+              {{ word.transText }}
             </div>
           </v-card-item>
 
@@ -109,6 +102,7 @@
 import { computed, ref } from "vue";
 import { useUserDataStore } from "@/store/userDataStore";
 import { useMainStore } from "@/store/mainStore";
+import OriginalWord from "@/components/OriginalWord.vue";
 
 const mainStore = useMainStore();
 const userDataStore = useUserDataStore();
@@ -145,7 +139,6 @@ const snackbarTimeout = 2000;
 const snackbarText = ref("");
 
 // функция добавления слова в профайл юзера
-
 const addWord = async (word) => {
   checking.value = true;
 

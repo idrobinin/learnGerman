@@ -16,13 +16,14 @@
             </v-window-item>
 
             <!--    часть с книгами   -->
-            <v-window-item value="books">Мои книги</v-window-item>
+            <v-window-item value="books">Мои книги </v-window-item>
 
             <!--    часть со словами    -->
-            <v-window-item value="words">Мои слова</v-window-item>
+            <v-window-item value="words">
+              <user-profile-words />
+            </v-window-item>
           </v-window>
         </v-card-text>
-        {{ userDataStore.userData.words }}
       </v-col>
     </v-layout>
   </v-container>
@@ -30,7 +31,8 @@
 
 <script setup>
 import { ref } from "vue";
-import UserProfileData from "@/components/userProfileData.vue";
+import UserProfileData from "@/components/UserProfileData.vue";
+import UserProfileWords from "@/components/UserProfileWords.vue";
 import { useUserDataStore } from "@/store/userDataStore";
 
 const userDataStore = useUserDataStore();
