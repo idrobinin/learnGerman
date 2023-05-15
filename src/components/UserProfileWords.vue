@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <v-card>
+  <div v-if="words.length">
+    <!--    секция текущего слова для изучения      -->
+    <v-card class="mb-5 border-md" color="#CCFFFF">
       <v-card-item>
         <original-word :word="currentWord" />
         <v-divider />
@@ -14,7 +15,7 @@
         <v-btn
           color="#5865f2"
           rounded
-          class="border-sm"
+          class="border-sm text-none"
           @click="currentWord.showTranslation = !currentWord.showTranslation"
         >
           {{
@@ -24,58 +25,69 @@
           }}
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn color="#00CC00" rounded class="border-sm"> Я запомнил </v-btn>
+        <v-btn
+          color="#00CC00"
+          rounded
+          class="border-sm text-none"
+          @click="userDataStore.PROCESS_USER_WORD(currentWord.key)"
+        >
+          Я запомнил
+        </v-btn>
       </v-card-actions>
     </v-card>
+
+    <!--    список всех добавленных слов    -->
+    <div>
+      <div class="text-center text-h5 mb-3">Всего {{ words.length }}</div>
+      <v-card v-for="word in words" :key="word.key" class="mb-1">
+        <div v-if="currentWord.key != word.key" class="border-sm">
+          <v-card-item>
+            <original-word :word="word" />
+            <v-divider />
+            <div class="text-m">
+              {{ word?.transText }}
+            </div>
+          </v-card-item>
+          <v-card-actions>
+            <span>
+              <v-btn
+                icon="mdi-arrow-up"
+                variant="outlined"
+                size="small"
+                @click="setWordAsCurrent(word)"
+              >
+              </v-btn>
+              <v-tooltip activator="parent" location="bottom"
+                >Сделать текущим</v-tooltip
+              >
+            </span>
+          </v-card-actions>
+        </div>
+      </v-card>
+    </div>
   </div>
+
+  <div v-else class="text-center text-h5">У вас нет добавленных слов</div>
 </template>
 
 <script setup>
 import { ref, onBeforeMount } from "vue";
 import { useUserDataStore } from "@/store/userDataStore";
 import OriginalWord from "@/components/OriginalWord.vue";
+import { setWords } from "@/hooks/setUserWordsToProfile";
 
 const userDataStore = useUserDataStore();
 
 const words = ref([]);
 const currentWord = ref(null);
 
-const setWords = () => {
-  words.value.length = 0;
-  let userWords = userDataStore.userData?.words;
-  for (let property in userWords) {
-    if (userWords.hasOwnProperty(property)) {
-      let word = userWords[property];
-
-      // проверяем доступно ли слово для изучения проверяя дату добавления
-      // сначала проверяем добавлено ли юзером из книг либо взято из Firestore
-
-      let isWordAvailable =
-        word.nextShowDate instanceof Date
-          ? word.nextShowDate <= new Date()
-          : word.nextShowDate.toDate() <= new Date();
-
-      // заполняем наш массив словами
-
-      if (isWordAvailable) {
-        words.value.push({
-          origText: word.origText,
-          transText: word.transText,
-          origArticle: word.origArticle ? word.origArticle : null,
-          type: word.type ? word.type : null,
-          key: property,
-          showTranslation: false,
-        });
-      }
-    }
-  }
-
-  // показываем первое слово из списка юзеру
-  if (words.value.length) currentWord.value = words.value[0];
+// функция замены текущего слова на желаемое
+const setWordAsCurrent = (word) => {
+  currentWord.value = word;
 };
 
 onBeforeMount(() => {
-  setWords();
+  setWords(words, currentWord);
 });
 </script>
 
