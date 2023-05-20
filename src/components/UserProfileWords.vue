@@ -6,7 +6,7 @@
         <original-word :word="currentWord" />
         <v-divider />
         <Transition name="fade">
-          <div v-if="currentWord.showTranslation === true" class="text-m">
+          <div v-if="currentWord.showTranslation === true" class="font-italic">
             {{ currentWord.transText }}
           </div>
         </Transition>
@@ -39,28 +39,50 @@
     <!--    список всех добавленных слов    -->
     <div>
       <div class="text-center text-h5 mb-3">Всего {{ words.length }}</div>
+
       <v-card v-for="word in words" :key="word.key" class="mb-1">
         <div v-if="currentWord.key != word.key" class="border-sm">
           <v-card-item>
             <original-word :word="word" />
             <v-divider />
-            <div class="text-m">
+            <div class="font-italic">
               {{ word?.transText }}
             </div>
           </v-card-item>
           <v-card-actions>
-            <span>
-              <v-btn
-                icon="mdi-arrow-up"
-                variant="outlined"
-                size="small"
-                @click="setWordAsCurrent(word)"
+            <button @click="setWordAsCurrent(word)" class="mr-2">
+              <span
+                class="d-flex justify-center align-center"
+                style="
+                  width: 38px;
+                  height: 38px;
+                  border-radius: 100%;
+                  border: 1px solid black;
+                "
               >
-              </v-btn>
-              <v-tooltip activator="parent" location="bottom"
-                >Сделать текущим</v-tooltip
+                <svg-icon type="mdi" :path="mdiArrowUp"></svg-icon>
+                <v-tooltip activator="parent" location="bottom"
+                  >Сделать текущим</v-tooltip
+                >
+              </span>
+            </button>
+
+            <button @click="playAudioText(word.origText, 0.8)">
+              <span
+                class="d-flex justify-center align-center"
+                style="
+                  width: 38px;
+                  height: 38px;
+                  border-radius: 100%;
+                  border: 1px solid black;
+                "
               >
-            </span>
+                <svg-icon type="mdi" :path="mdiVolumeHigh"></svg-icon>
+                <v-tooltip activator="parent" location="bottom"
+                  >Воспроизвести</v-tooltip
+                >
+              </span>
+            </button>
           </v-card-actions>
         </div>
       </v-card>
@@ -75,6 +97,9 @@ import { ref, onBeforeMount } from "vue";
 import { useUserDataStore } from "@/store/userDataStore";
 import OriginalWord from "@/components/OriginalWord.vue";
 import { setWords } from "@/hooks/setUserWordsToProfile";
+import { playAudioText } from "@/hooks/usePlayingText";
+import SvgIcon from "@jamescoyle/vue-icon";
+import { mdiVolumeHigh, mdiArrowUp } from "@mdi/js";
 
 const userDataStore = useUserDataStore();
 
