@@ -174,7 +174,13 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     await getDocSnap(userStore.userId);
   };
 
-  const PROCESS_USER_WORD = (wordKey) => {};
+  const PROCESS_USER_WORD = (wordKey) => {
+    let word = userData.value.words[wordKey];
+
+    const docRef = doc(db, "userData", `${userStore.userId}`);
+
+    console.log(word);
+  };
 
   return {
     userData,

@@ -13,9 +13,10 @@
       </v-card-item>
       <v-card-actions>
         <v-btn
+          height="38px"
           color="#5865f2"
           rounded
-          class="border-sm text-none"
+          class="border-sm text-none mr-2"
           @click="currentWord.showTranslation = !currentWord.showTranslation"
         >
           {{
@@ -24,8 +25,28 @@
               : "Скрыть перевод"
           }}
         </v-btn>
+        <button
+          v-if="ableToPronounce"
+          @click="playAudioText(currentWord.origText, 0.8)"
+        >
+          <span
+            class="d-flex justify-center align-center"
+            style="
+              width: 38px;
+              height: 38px;
+              border-radius: 100%;
+              border: 1px solid black;
+            "
+          >
+            <svg-icon type="mdi" :path="mdiVolumeHigh"></svg-icon>
+            <v-tooltip activator="parent" location="bottom"
+              >Воспроизвести</v-tooltip
+            >
+          </span>
+        </button>
         <v-spacer></v-spacer>
         <v-btn
+          height="38px"
           color="#00CC00"
           rounded
           class="border-sm text-none"
@@ -67,7 +88,10 @@
               </span>
             </button>
 
-            <button @click="playAudioText(word.origText, 0.8)">
+            <button
+              v-if="ableToPronounce"
+              @click="playAudioText(word.origText, 0.8)"
+            >
               <span
                 class="d-flex justify-center align-center"
                 style="
@@ -105,6 +129,11 @@ const userDataStore = useUserDataStore();
 
 const words = ref([]);
 const currentWord = ref(null);
+const ableToPronounce = ref(false);
+
+const checkAvailabilityToPronounceWords = () => {
+  if (window.speechSynthesis) ableToPronounce.value = true;
+};
 
 // функция замены текущего слова на желаемое
 const setWordAsCurrent = (word) => {
@@ -113,6 +142,7 @@ const setWordAsCurrent = (word) => {
 
 onBeforeMount(() => {
   setWords(words, currentWord);
+  checkAvailabilityToPronounceWords();
 });
 </script>
 
