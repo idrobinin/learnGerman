@@ -7,6 +7,7 @@ import {
   getDoc,
   setDoc,
   updateDoc,
+  deleteField,
   Timestamp,
 } from "firebase/firestore/lite";
 import { db } from "@/config/firebase";
@@ -174,16 +175,56 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     await getDocSnap(userStore.userId);
   };
 
-  const PROCESS_USER_WORD = (wordKey) => {
+  // функция переноса слова с следующую корзину для изучения и выставления следующей даты показа юзеру
+  const PROCESS_USER_WORD = async (words, wordKey) => {
     let word = userData.value.words[wordKey];
+
+    console.log(word);
 
     const docRef = doc(db, "userData", `${userStore.userId}`);
 
-    console.log(word);
+    if (word.bucket === 5) {
+      await updateDoc(docRef, {
+        [`words.${wordKey}`]: deleteField(),
+      }).then(() => {
+        REMOVE_USER_WORD(words.value, wordKey);
+        getDocSnap(userStore.userId);
+      });
+    } else {
+      let wordBucket = word.bucket;
+      let nextDateToShowWord = new Date();
+
+      // выставляем следующую дату показа слова для изучения
+      nextDateToShowWord = new Date(
+        nextDateToShowWord.setDate(new Date().getDate() + word.bucket * 2)
+      );
+      // меняем поля в компоненте слов
+      word.nextShowDate = nextDateToShowWord;
+      word.bucket = wordBucket + 1;
+
+      // записываем в БД
+      await setDoc(
+        doc(db, "userData", `${userStore.userId}`),
+        {
+          words: {
+            [wordKey]: word,
+          },
+        },
+        { merge: true }
+      ).then(() => {
+        getDocSnap(userStore.userId);
+      });
+    }
+  };
+
+  // функция удаления слова из данных юзера так как оно им изучено(дошло до 5 корзины)
+  const REMOVE_USER_WORD = (wordKey, words) => {
+    words.value.filter((el) => el !== words.value[`${wordKey}`]);
   };
 
   return {
     userData,
+    REMOVE_USER_WORD,
     PROCESS_USER_WORD,
     LOAD_USER_DATA,
     SET_USER_DATA,

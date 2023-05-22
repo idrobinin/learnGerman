@@ -50,7 +50,7 @@
           color="#00CC00"
           rounded
           class="border-sm text-none"
-          @click="userDataStore.PROCESS_USER_WORD(currentWord.key)"
+          @click="userDataStore.PROCESS_USER_WORD(words, currentWord.key)"
         >
           Я запомнил
         </v-btn>
@@ -87,7 +87,7 @@
                 >
               </span>
             </button>
-
+            {{ words }}
             <button
               v-if="ableToPronounce"
               @click="playAudioText(word.origText, 0.8)"
@@ -139,6 +139,8 @@ const checkAvailabilityToPronounceWords = () => {
 const setWordAsCurrent = (word) => {
   currentWord.value = word;
 };
+
+// onUpdated(() => setWords(words, currentWord));
 
 onBeforeMount(() => {
   setWords(words, currentWord);
