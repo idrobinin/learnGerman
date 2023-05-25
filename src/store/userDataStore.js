@@ -172,14 +172,12 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       getDocSnap(userStore.userId);
     });
     mainStore.SET_PROCESSING(false);
-    await getDocSnap(userStore.userId);
+    // await getDocSnap(userStore.userId);
   };
 
   // функция переноса слова с следующую корзину для изучения и выставления следующей даты показа юзеру
   const PROCESS_USER_WORD = async (words, wordKey) => {
     let word = userData.value.words[wordKey];
-
-    console.log(word);
 
     const docRef = doc(db, "userData", `${userStore.userId}`);
 
@@ -187,8 +185,10 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       await updateDoc(docRef, {
         [`words.${wordKey}`]: deleteField(),
       }).then(() => {
-        REMOVE_USER_WORD(words.value, wordKey);
+        // REMOVE_USER_WORD(words, wordKey);
         getDocSnap(userStore.userId);
+        console.log(words);
+        console.log(wordKey);
       });
     } else {
       let wordBucket = word.bucket;
@@ -215,11 +215,14 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         getDocSnap(userStore.userId);
       });
     }
+
+    return words;
   };
 
   // функция удаления слова из данных юзера так как оно им изучено(дошло до 5 корзины)
-  const REMOVE_USER_WORD = (wordKey, words) => {
-    words.value.filter((el) => el !== words.value[`${wordKey}`]);
+  const REMOVE_USER_WORD = (words, wordKey) => {
+    words.filter((el) => el.key !== wordKey);
+    console.log(wordKey);
   };
 
   return {

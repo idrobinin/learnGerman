@@ -135,7 +135,7 @@ const words = computed(() => {
 
 // модель снекбара
 const snackbar = ref(false);
-const snackbarTimeout = 2000;
+const snackbarTimeout = 1000;
 const snackbarText = ref("");
 
 // функция добавления слова в профайл юзера

@@ -71,46 +71,51 @@
             </div>
           </v-card-item>
           <v-card-actions>
-            <button @click="setWordAsCurrent(word)" class="mr-2">
-              <span
-                class="d-flex justify-center align-center"
-                style="
-                  width: 38px;
-                  height: 38px;
-                  border-radius: 100%;
-                  border: 1px solid black;
-                "
-              >
-                <svg-icon type="mdi" :path="mdiArrowUp"></svg-icon>
-                <v-tooltip activator="parent" location="bottom"
-                  >Сделать текущим</v-tooltip
+            <div class="d-flex justify-space-between w-100">
+              <button @click="setWordAsCurrent(word)" class="mr-2">
+                <span
+                  class="d-flex justify-center align-center"
+                  style="
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 100%;
+                    border: 1px solid black;
+                  "
                 >
-              </span>
-            </button>
-            {{ words }}
-            <button
-              v-if="ableToPronounce"
-              @click="playAudioText(word.origText, 0.8)"
-            >
-              <span
-                class="d-flex justify-center align-center"
-                style="
-                  width: 38px;
-                  height: 38px;
-                  border-radius: 100%;
-                  border: 1px solid black;
-                "
+                  <svg-icon type="mdi" :path="mdiArrowUp"></svg-icon>
+                  <v-tooltip activator="parent" location="bottom"
+                    >Сделать текущим</v-tooltip
+                  >
+                </span>
+              </button>
+
+              <button
+                v-if="ableToPronounce"
+                @click="playAudioText(word.origText, 0.8)"
               >
-                <svg-icon type="mdi" :path="mdiVolumeHigh"></svg-icon>
-                <v-tooltip activator="parent" location="bottom"
-                  >Воспроизвести</v-tooltip
+                <span
+                  class="d-flex justify-center align-center"
+                  style="
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 100%;
+                    border: 1px solid black;
+                  "
                 >
-              </span>
-            </button>
+                  <svg-icon type="mdi" :path="mdiVolumeHigh"></svg-icon>
+                  <v-tooltip activator="parent" location="bottom"
+                    >Воспроизвести</v-tooltip
+                  >
+                </span>
+              </button>
+            </div>
           </v-card-actions>
         </div>
       </v-card>
     </div>
+
+    <div class="mb-4">Компонент: {{ words }}</div>
+    <div>Стор: {{ userDataStore.userData.words }}</div>
   </div>
 
   <div v-else class="text-center text-h5">У вас нет добавленных слов</div>
@@ -139,8 +144,6 @@ const checkAvailabilityToPronounceWords = () => {
 const setWordAsCurrent = (word) => {
   currentWord.value = word;
 };
-
-// onUpdated(() => setWords(words, currentWord));
 
 onBeforeMount(() => {
   setWords(words, currentWord);
