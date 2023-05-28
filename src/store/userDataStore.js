@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, nextTick } from "vue";
+import { ref } from "vue";
 import { useMainStore } from "@/store/mainStore";
 import { useUserStore } from "@/store/userStore";
 import {
@@ -211,6 +211,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         },
         { merge: true }
       ).then(() => {
+        setWords(words);
         getDocSnap(userStore.userId);
       });
     }

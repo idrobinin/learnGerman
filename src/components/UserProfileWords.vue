@@ -125,6 +125,7 @@
         </div>
       </v-card>
     </div>
+    {{ userDataStore.userData.words }}
   </div>
 
   <div v-else class="text-center text-h5">У вас нет добавленных слов</div>
