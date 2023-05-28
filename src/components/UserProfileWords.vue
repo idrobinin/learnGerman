@@ -3,11 +3,14 @@
     <!--    секция текущего слова для изучения      -->
     <v-card class="mb-5 border-md" color="#CCFFFF">
       <v-card-item>
-        <original-word :word="currentWord" />
+        <original-word :word="userDataStore.currentWord" />
         <v-divider />
         <Transition name="fade">
-          <div v-if="currentWord.showTranslation === true" class="font-italic">
-            {{ currentWord.transText }}
+          <div
+            v-if="userDataStore.currentWord.showTranslation === true"
+            class="font-italic"
+          >
+            {{ userDataStore.currentWord.transText }}
           </div>
         </Transition>
       </v-card-item>
@@ -17,17 +20,20 @@
           color="#5865f2"
           rounded
           class="border-sm text-none mr-2"
-          @click="currentWord.showTranslation = !currentWord.showTranslation"
+          @click="
+            userDataStore.currentWord.showTranslation =
+              !userDataStore.currentWord.showTranslation
+          "
         >
           {{
-            currentWord.showTranslation === false
+            userDataStore.currentWord.showTranslation === false
               ? "Показать перевод"
               : "Скрыть перевод"
           }}
         </v-btn>
         <button
           v-if="ableToPronounce"
-          @click="playAudioText(currentWord.origText, 0.8)"
+          @click="playAudioText(userDataStore.currentWord.origText, 0.8)"
         >
           <span
             class="d-flex justify-center align-center"
@@ -50,7 +56,13 @@
           color="#00CC00"
           rounded
           class="border-sm text-none"
-          @click="userDataStore.PROCESS_USER_WORD(words, currentWord.key)"
+          @click="
+            userDataStore.PROCESS_USER_WORD(
+              words,
+              userDataStore.currentWord.key,
+              userDataStore.currentWord
+            )
+          "
         >
           Я запомнил
         </v-btn>
@@ -62,7 +74,7 @@
       <div class="text-center text-h5 mb-3">Всего {{ words.length }}</div>
 
       <v-card v-for="word in words" :key="word.key" class="mb-1">
-        <div v-if="currentWord.key != word.key" class="border-sm">
+        <div v-if="userDataStore.currentWord.key != word.key" class="border-sm">
           <v-card-item>
             <original-word :word="word" />
             <v-divider />
@@ -113,9 +125,6 @@
         </div>
       </v-card>
     </div>
-
-    <div class="mb-4">Компонент: {{ words }}</div>
-    <div>Стор: {{ userDataStore.userData.words }}</div>
   </div>
 
   <div v-else class="text-center text-h5">У вас нет добавленных слов</div>
@@ -133,7 +142,6 @@ import { mdiVolumeHigh, mdiArrowUp } from "@mdi/js";
 const userDataStore = useUserDataStore();
 
 const words = ref([]);
-const currentWord = ref(null);
 const ableToPronounce = ref(false);
 
 const checkAvailabilityToPronounceWords = () => {
@@ -142,11 +150,11 @@ const checkAvailabilityToPronounceWords = () => {
 
 // функция замены текущего слова на желаемое
 const setWordAsCurrent = (word) => {
-  currentWord.value = word;
+  userDataStore.UPDATE_CURRENT_WORD(word);
 };
 
 onBeforeMount(() => {
-  setWords(words, currentWord);
+  setWords(words);
   checkAvailabilityToPronounceWords();
 });
 </script>

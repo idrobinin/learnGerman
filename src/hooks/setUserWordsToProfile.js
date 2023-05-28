@@ -1,7 +1,7 @@
 import { useUserDataStore } from "@/store/userDataStore";
 
 // получаем все уровни языка книг в один массив
-export const setWords = (userWords, currentWord) => {
+export const setWords = (userWords) => {
   const userDataStore = useUserDataStore();
 
   userWords.value = [];
@@ -24,5 +24,7 @@ export const setWords = (userWords, currentWord) => {
   }
 
   // показываем первое слово из списка юзеру
-  if (userWords.value.length) currentWord.value = userWords.value[0];
+  if (userWords.value.length) {
+    userDataStore.UPDATE_CURRENT_WORD(userWords.value[0]);
+  }
 };

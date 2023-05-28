@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { useMainStore } from "@/store/mainStore";
 import { useUserStore } from "@/store/userStore";
 import {
@@ -11,6 +11,7 @@ import {
   Timestamp,
 } from "firebase/firestore/lite";
 import { db } from "@/config/firebase";
+import { setWords } from "@/hooks/setUserWordsToProfile";
 
 const defaultUserData = {
   books: {},
@@ -172,23 +173,21 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       getDocSnap(userStore.userId);
     });
     mainStore.SET_PROCESSING(false);
-    // await getDocSnap(userStore.userId);
   };
 
   // функция переноса слова с следующую корзину для изучения и выставления следующей даты показа юзеру
-  const PROCESS_USER_WORD = async (words, wordKey) => {
+  const PROCESS_USER_WORD = async (words, wordKey, currentWord) => {
     let word = userData.value.words[wordKey];
 
     const docRef = doc(db, "userData", `${userStore.userId}`);
 
-    if (word.bucket === 5) {
+    if (word.bucket == 5) {
       await updateDoc(docRef, {
         [`words.${wordKey}`]: deleteField(),
       }).then(() => {
-        // REMOVE_USER_WORD(words, wordKey);
+        REMOVE_USER_WORD(words, wordKey, currentWord);
+        UPDATE_CURRENT_WORD(words[0]);
         getDocSnap(userStore.userId);
-        console.log(words);
-        console.log(wordKey);
       });
     } else {
       let wordBucket = word.bucket;
@@ -215,19 +214,34 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         getDocSnap(userStore.userId);
       });
     }
-
-    return words;
   };
 
   // функция удаления слова из данных юзера так как оно им изучено(дошло до 5 корзины)
   const REMOVE_USER_WORD = (words, wordKey) => {
-    words.filter((el) => el.key !== wordKey);
-    console.log(wordKey);
+    let indexToRemove;
+
+    words.forEach((el, i) => {
+      if (el.key === wordKey) {
+        indexToRemove = i;
+      }
+    });
+
+    if (indexToRemove !== undefined) {
+      words.splice(indexToRemove, 1);
+    }
   };
 
+  // модель текущего слова в профиле юзера
+  const currentWord = ref(null);
+
+  // изменяем текущее слово при изменении его в массиве или окончании изучения
+  const UPDATE_CURRENT_WORD = (word) => {
+    currentWord.value = word;
+  };
   return {
+    UPDATE_CURRENT_WORD,
+    currentWord,
     userData,
-    REMOVE_USER_WORD,
     PROCESS_USER_WORD,
     LOAD_USER_DATA,
     SET_USER_DATA,
