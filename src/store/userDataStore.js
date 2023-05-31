@@ -11,7 +11,6 @@ import {
   Timestamp,
 } from "firebase/firestore/lite";
 import { db } from "@/config/firebase";
-import { setWords } from "@/hooks/setUserWordsToProfile";
 
 const defaultUserData = {
   books: {},
@@ -178,7 +177,9 @@ export const useUserDataStore = defineStore("userDataStore", () => {
   // функция переноса слова с следующую корзину для изучения и выставления следующей даты показа юзеру
   const PROCESS_USER_WORD = async (words, wordKey) => {
     let word = userData.value.words[wordKey];
+    console.log(userData.value.words[wordKey]);
 
+    // if (word.bucket == 1) console.log("Hi");
     const docRef = doc(db, "userData", `${userStore.userId}`);
 
     if (word.bucket === 5) {
@@ -200,7 +201,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       // меняем поля в компоненте слов
       word.nextShowDate = nextDateToShowWord;
       word.bucket = wordBucket + 1;
-
+      await getDocSnap(userStore.userId);
       // записываем в БД
       await setDoc(
         doc(db, "userData", `${userStore.userId}`),
@@ -239,7 +240,12 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       transText: word.transText,
       origArticle: word.origArticle ? word.origArticle : null,
       type: word.type ? word.type : null,
-      key: `${word.origArticle}${word.origText}`.toLowerCase(),
+      key: word.origArticle
+        ? `${word.origArticle}${word.origText}`
+            .toLowerCase()
+            .split(" ")
+            .join("")
+        : `${word.origText}`.toLowerCase().split(" ").join(""),
       showTranslation: false,
     });
   };
