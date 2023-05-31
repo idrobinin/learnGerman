@@ -1,5 +1,5 @@
 <template>
-  <div v-if="words.length">
+  <div v-if="userDataStore.userWords.length">
     <!--    секция текущего слова для изучения      -->
     <v-card class="mb-5 border-md" color="#CCFFFF">
       <v-card-item>
@@ -58,9 +58,8 @@
           class="border-sm text-none"
           @click="
             userDataStore.PROCESS_USER_WORD(
-              words,
-              userDataStore.currentWord.key,
-              userDataStore.currentWord
+              userDataStore.userWords,
+              userDataStore.currentWord.key
             )
           "
         >
@@ -71,9 +70,15 @@
 
     <!--    список всех добавленных слов    -->
     <div>
-      <div class="text-center text-h5 mb-3">Всего {{ words.length }}</div>
+      <div class="text-center text-h5 mb-3">
+        Всего {{ userDataStore.userWords.length }}
+      </div>
 
-      <v-card v-for="word in words" :key="word.key" class="mb-1">
+      <v-card
+        v-for="word in userDataStore.userWords"
+        :key="word.key"
+        class="mb-1"
+      >
         <div v-if="userDataStore.currentWord.key != word.key" class="border-sm">
           <v-card-item>
             <original-word :word="word" />
@@ -125,7 +130,9 @@
         </div>
       </v-card>
     </div>
-    {{ userDataStore.userData.words }}
+    userWordsInComp : {{ userDataStore.userWords }}
+    ================================================================
+    <div>{{ userDataStore.userData.words }}</div>
   </div>
 
   <div v-else class="text-center text-h5">У вас нет добавленных слов</div>
@@ -142,7 +149,6 @@ import { mdiVolumeHigh, mdiArrowUp } from "@mdi/js";
 
 const userDataStore = useUserDataStore();
 
-const words = ref([]);
 const ableToPronounce = ref(false);
 
 const checkAvailabilityToPronounceWords = () => {
@@ -155,7 +161,7 @@ const setWordAsCurrent = (word) => {
 };
 
 onBeforeMount(() => {
-  setWords(words);
+  setWords(userDataStore.userWords);
   checkAvailabilityToPronounceWords();
 });
 </script>

@@ -176,16 +176,16 @@ export const useUserDataStore = defineStore("userDataStore", () => {
   };
 
   // функция переноса слова с следующую корзину для изучения и выставления следующей даты показа юзеру
-  const PROCESS_USER_WORD = async (words, wordKey, currentWord) => {
+  const PROCESS_USER_WORD = async (words, wordKey) => {
     let word = userData.value.words[wordKey];
 
     const docRef = doc(db, "userData", `${userStore.userId}`);
 
-    if (word.bucket == 5) {
+    if (word.bucket === 5) {
       await updateDoc(docRef, {
         [`words.${wordKey}`]: deleteField(),
       }).then(() => {
-        REMOVE_USER_WORD(words, wordKey, currentWord);
+        REMOVE_USER_WORD(words, wordKey);
         UPDATE_CURRENT_WORD(words[0]);
         getDocSnap(userStore.userId);
       });
@@ -211,7 +211,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         },
         { merge: true }
       ).then(() => {
-        setWords(words);
         getDocSnap(userStore.userId);
       });
     }
@@ -232,6 +231,19 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     }
   };
 
+  const userWords = ref([]);
+
+  const updateWords = (word) => {
+    userWords.value.push({
+      origText: word.origText,
+      transText: word.transText,
+      origArticle: word.origArticle ? word.origArticle : null,
+      type: word.type ? word.type : null,
+      key: `${word.origArticle}${word.origText}`.toLowerCase(),
+      showTranslation: false,
+    });
+  };
+
   // модель текущего слова в профиле юзера
   const currentWord = ref(null);
 
@@ -240,6 +252,8 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     currentWord.value = word;
   };
   return {
+    updateWords,
+    userWords,
     UPDATE_CURRENT_WORD,
     currentWord,
     userData,
