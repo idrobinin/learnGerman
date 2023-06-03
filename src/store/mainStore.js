@@ -14,6 +14,7 @@ export const useMainStore = defineStore("mainStore", () => {
   const SET_ERROR = (payload) => {
     error.value = payload;
   };
+
   const CLEAR_ERROR = () => {
     error.value = null;
   };

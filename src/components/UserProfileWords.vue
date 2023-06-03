@@ -130,10 +130,6 @@
         </div>
       </v-card>
     </div>
-    userWordsInComp : {{ userDataStore.userWords }}
-    ================================================================
-    <div>{{ userDataStore.userData.words }}</div>
-    <div>{{ userDataStore.currentWord }}</div>
   </div>
 
   <div v-else class="text-center text-h5">У вас нет добавленных слов</div>

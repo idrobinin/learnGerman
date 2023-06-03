@@ -32,7 +32,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
 
   // функция загрузки личных данных списка книг и слов одного юзера из БД для рендеринга Profile
   const LOAD_USER_DATA = async (userId) => {
-    mainStore.SET_PROCESSING(true);
     try {
       const docRef = doc(db, "userData", `${userId}`);
       const docSnap = await getDoc(docRef);
@@ -55,13 +54,10 @@ export const useUserDataStore = defineStore("userDataStore", () => {
           fetchedUserData.words = {};
         }
         SET_USER_DATA(fetchedUserData);
-        mainStore.SET_PROCESSING(false);
       }
     } catch (error) {
       console.log(error);
-      mainStore.SET_PROCESSING(false);
     }
-    mainStore.SET_PROCESSING(false);
   };
 
   // функция добавления книги в коллекцию юзера в базе данных  по переданному айди книги
@@ -177,9 +173,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
   // функция переноса слова с следующую корзину для изучения и выставления следующей даты показа юзеру
   const PROCESS_USER_WORD = async (words, wordKey) => {
     let word = userData.value.words[wordKey];
-    console.log(userData.value.words[wordKey]);
 
-    // if (word.bucket == 1) console.log("Hi");
     const docRef = doc(db, "userData", `${userStore.userId}`);
 
     if (word.bucket === 5) {
@@ -232,8 +226,10 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     }
   };
 
+  // модель массива для отрисовки слов юзера в компонент
   const userWords = ref([]);
 
+  // добавляем слова в массив для отрисовки из БД
   const updateWords = (word) => {
     userWords.value.push({
       origText: word.origText,

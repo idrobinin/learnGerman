@@ -29,14 +29,11 @@
 import { computed } from "vue";
 import { useUserDataStore } from "@/store/userDataStore";
 import { useUserStore } from "@/store/userStore";
-import { useMainStore } from "@/store/mainStore";
 
 const userStore = useUserStore();
-const mainStore = useMainStore();
 const userDataStore = useUserDataStore();
 
 const isUserAuthenticated = userStore.isUserAuthenticated;
-const getProcessing = mainStore.getProcessing;
 
 const props = defineProps({
   part: {
@@ -52,11 +49,7 @@ const props = defineProps({
 
 // проверка загружена ли книга в БД профайл пользователя для отображения кнопки
 const isUserBookLoaded = computed(() => {
-  return (
-    isUserAuthenticated &&
-    !getProcessing &&
-    !!userDataStore.userData.books[props.bookId]
-  );
+  return isUserAuthenticated && !!userDataStore.userData.books[props.bookId];
 });
 
 //если книга загружена и есть чать книги по айди этой части, то возвращаем закончена ли работа с частью для отображения CHECK ICON

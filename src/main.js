@@ -10,5 +10,3 @@ import { registerPlugins } from "@/plugins";
 registerPlugins(app);
 app.component("YouTube", YouTube);
 app.mount("#app");
-
-// следим за изменением  стейта юзера

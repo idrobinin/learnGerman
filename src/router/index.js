@@ -10,6 +10,7 @@ import BookPart from "@/components/BookPart.vue";
 import Profile from "../views/Profile.vue";
 import AppE404 from "../views/E404.vue";
 import { useUserStore } from "@/store/userStore";
+import { useMainStore } from "@/store/mainStore";
 
 const routes = [
   {
@@ -73,20 +74,35 @@ const router = createRouter({
 
 // функция роутер гард
 router.beforeEach((to, from, next) => {
-  // Check if user is authenticated
   const userStore = useUserStore();
-  const isUserAuthenticated = userStore.isUserAuthenticated;
 
-  if (
-    isUserAuthenticated === false &&
-    to.name !== "signin" &&
-    to.name !== "signup"
-  ) {
-    // Redirect to signin page if user is not authenticated
-    next({ name: "signin" });
-  } else {
-    next();
-  }
+  // const isUserAuthenticated = userStore.isUserAuthenticated;
+
+  // if (
+  //   isUserAuthenticated === false &&
+  //   to.name !== "signin" &&
+  //   to.name !== "signup"
+  // ) {
+  //   // Redirect to signin page if user is not authenticated
+  //   next({ name: "signin" });
+  // } else {
+  //   next();
+  // }
+
+  // проверка требуется ли аутентификация пользователя для входа на роут
+
+  userStore.INIT_AUTH().then((user) => {
+    if (to.matched.some((route) => route.meta.requiresAuth)) {
+      if (user) {
+        next();
+      } else {
+        // Redirect to signin page if user is not authenticated
+        next({ name: "signin" });
+      }
+    } else {
+      next();
+    }
+  });
 });
 
 export default router;

@@ -8,8 +8,10 @@ import {
   updateProfile,
   updateEmail,
   updatePassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { useMainStore } from "@/store/mainStore";
+import { useUserDataStore } from "@/store/userDataStore";
 import { useRouter } from "vue-router";
 
 export const useUserStore = defineStore("userStore", () => {
@@ -20,8 +22,22 @@ export const useUserStore = defineStore("userStore", () => {
   });
 
   const mainStore = useMainStore();
+  const userDataStore = useUserDataStore();
   const router = useRouter();
   const auth = getAuth();
+
+  // функция инициации юзера (при перезагрузке страницы оставляем его на странице)
+  const INIT_AUTH = () => {
+    return new Promise((resolve, reject) => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          SET_USER(user);
+          userDataStore.LOAD_USER_DATA(user.uid);
+        }
+        resolve(user);
+      });
+    });
+  };
 
   // функция записи юзера в стор
   const SET_USER = (userData) => {
@@ -73,7 +89,6 @@ export const useUserStore = defineStore("userStore", () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-
         SET_USER(userCredential.user);
 
         router.push({ name: "profile" });
@@ -154,16 +169,17 @@ export const useUserStore = defineStore("userStore", () => {
   const userId = computed(() => user.value.uid);
 
   // смотрим залогинен ли юзер и оставляем его на сайте
-  watch(
-    () => user.value.isAuthenticated,
-    (newVal) => {
-      if (newVal) {
-        router.push({ name: "profile" });
-      }
-    }
-  );
+  // watch(
+  //   () => user.value.isAuthenticated,
+  //   (newVal) => {
+  //     if (newVal) {
+  //       router.push({ name: "profile" });
+  //     }
+  //   }
+  // );
 
   return {
+    INIT_AUTH,
     SET_USER,
     SIGNUP,
     SIGNIN,

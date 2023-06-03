@@ -5,6 +5,5 @@ export function getBookByBookId(id, books) {
   const getBook = computed(() => {
     return books.find((book) => book.id === id);
   });
-
   return { getBook };
 }

@@ -11,11 +11,7 @@ export const setWords = () => {
     if (userWordsInStore.hasOwnProperty(property)) {
       let word = userWordsInStore[property];
 
-      // userDataStore.updateWords(word);
-
       let isWordAvailableToShow;
-
-      console.log(word.nextShowDate instanceof Timestamp);
 
       if (word.nextShowDate instanceof Timestamp) {
         isWordAvailableToShow = word.nextShowDate.toDate() < new Date();

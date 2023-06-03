@@ -14,5 +14,5 @@ import Footer from "./components/Footer.vue";
 import { authUser } from "@/config/authUser";
 
 // следим за изменением  стейта юзера
-authUser.setup();
+// authUser.setup();
 </script>
