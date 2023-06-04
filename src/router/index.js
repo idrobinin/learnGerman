@@ -10,7 +10,6 @@ import BookPart from "@/components/BookPart.vue";
 import Profile from "../views/Profile.vue";
 import AppE404 from "../views/E404.vue";
 import { useUserStore } from "@/store/userStore";
-import { useMainStore } from "@/store/mainStore";
 
 const routes = [
   {

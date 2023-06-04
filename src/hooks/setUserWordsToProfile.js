@@ -4,13 +4,12 @@ import { Timestamp } from "firebase/firestore/lite";
 // получаем все уровни языка книг в один массив
 export const setWords = () => {
   const userDataStore = useUserDataStore();
-
+  let userWordsInStore = userDataStore.userData.words;
   userDataStore.userWords.value = [];
-  let userWordsInStore = userDataStore.userData?.words;
+
   for (let property in userWordsInStore) {
     if (userWordsInStore.hasOwnProperty(property)) {
       let word = userWordsInStore[property];
-
       let isWordAvailableToShow;
 
       if (word.nextShowDate instanceof Timestamp) {

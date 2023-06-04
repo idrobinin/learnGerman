@@ -65,7 +65,7 @@ import { onMounted, ref, computed } from "vue";
 import BookPartContent from "@/components/BookPartContent.vue";
 import BookPartWords from "@/components/BookPartWords.vue";
 import { useRoute } from "vue-router";
-import { LOAD_PART } from "@/hooks/loadBookPartFromDb";
+import { LOAD_PART } from "@/services/loadBookPartFromDb";
 import { getFinishedDateOfBookPart } from "@/hooks/getFinishedDateOfBookPart";
 import { useUserDataStore } from "@/store/userDataStore";
 

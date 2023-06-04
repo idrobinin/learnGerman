@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { onBeforeMount, ref } from "vue";
-import { LOAD_BOOKS } from "@/hooks/loadBooksFromDb";
+import { LOAD_BOOKS } from "@/services/loadBooksFromDb";
 
 export const useBooksStore = defineStore("booksStore", () => {
   // массив с книгами
