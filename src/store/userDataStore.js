@@ -271,7 +271,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
   const userWords = ref([]);
 
   // добавляем слова в массив для отрисовки из БД
-  const updateWords = (word) => {
+  const UPDATE_USER_PROFILE_WORDS = (word) => {
     userWords.value.push({
       origText: word.origText,
       transText: word.transText,
@@ -283,7 +283,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
             .split(" ")
             .join("")
         : `${word.origText}`.toLowerCase().split(" ").join(""),
-      showTranslation: false,
     });
   };
 
@@ -295,11 +294,11 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     currentWord.value = word;
   };
   return {
-    updateWords,
     userWords,
-    UPDATE_CURRENT_WORD,
     currentWord,
     userData,
+    UPDATE_USER_PROFILE_WORDS,
+    UPDATE_CURRENT_WORD,
     PROCESS_USER_WORD,
     LOAD_USER_DATA,
     SET_USER_DATA,

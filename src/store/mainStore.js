@@ -22,11 +22,11 @@ export const useMainStore = defineStore("mainStore", () => {
 
   return {
     processing,
-    SET_PROCESSING,
     getProcessing,
     error,
+    getError,
+    SET_PROCESSING,
     SET_ERROR,
     CLEAR_ERROR,
-    getError,
   };
 });

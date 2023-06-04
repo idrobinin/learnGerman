@@ -161,16 +161,16 @@ export const useUserStore = defineStore("userStore", () => {
   const userId = computed(() => user.value.uid);
 
   return {
+    isUserAuthenticated,
+    showSignoutDialog,
+    showChangeUserDataDialog,
+    user,
+    userId,
     INIT_AUTH,
     SET_USER,
     SIGNUP,
     SIGNIN,
     SIGN_OUT,
     CHANGE_USER_DATA_PROFILE,
-    isUserAuthenticated,
-    showSignoutDialog,
-    showChangeUserDataDialog,
-    user,
-    userId,
   };
 });
