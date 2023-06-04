@@ -76,20 +76,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
 
-  // const isUserAuthenticated = userStore.isUserAuthenticated;
-
-  // if (
-  //   isUserAuthenticated === false &&
-  //   to.name !== "signin" &&
-  //   to.name !== "signup"
-  // ) {
-  //   // Redirect to signin page if user is not authenticated
-  //   next({ name: "signin" });
-  // } else {
-  //   next();
-  // }
-
   // проверка требуется ли аутентификация пользователя для входа на роут
+  // сначала мы получаем юзера из БД, если он существует и затем рендерим нашу страницу
 
   userStore.INIT_AUTH().then((user) => {
     if (to.matched.some((route) => route.meta.requiresAuth)) {

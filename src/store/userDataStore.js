@@ -62,38 +62,56 @@ export const useUserDataStore = defineStore("userDataStore", () => {
 
   // функция добавления книги в коллекцию юзера в базе данных  по переданному айди книги
   const ADD_USER_BOOK = async (bookId) => {
-    mainStore.SET_PROCESSING(true);
+    try {
+      mainStore.SET_PROCESSING(true);
 
-    // создаем объект книги
-    let book = {
-      addedDate: new Date(),
-      parts: {},
-    };
+      // создаем объект книги
+      let book = {
+        addedDate: new Date(),
+        parts: {},
+      };
 
-    await setDoc(
-      doc(db, "userData", `${userStore.userId}`),
-      {
-        books: {
-          [bookId]: book,
+      await setDoc(
+        doc(db, "userData", `${userStore.userId}`),
+        {
+          books: {
+            [bookId]: book,
+          },
         },
-      },
-      { merge: true }
-    ).then(() => {
-      getDocSnap(userStore.userId);
-    });
-    mainStore.SET_PROCESSING(false);
+        { merge: true }
+      );
+
+      await getDocSnap(userStore.userId);
+    } catch (error) {
+      // Обработка ошибок
+      console.error(error);
+    } finally {
+      mainStore.SET_PROCESSING(false);
+    }
   };
 
   // функция записи данных в объект Vue (делаем реактивным так как вью не видит изменения в БД) (берем новые данные в БД и записываем в объект)
   const getDocSnap = async (userId) => {
-    const docRef = doc(db, "userData", `${userId}`);
-    const docSnap = await getDoc(docRef);
-    userData.value = docSnap.data();
+    try {
+      const docRef = doc(db, "userData", userId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        userData.value = docSnap.data();
+      } else {
+        // Обработка случая, когда документ не существует
+        userData.value = null;
+      }
+    } catch (error) {
+      // Обработка ошибок при получении документа
+      console.error(error);
+      userData.value = null;
+    }
   };
 
   // функция добавления и изменения статистики (дата добавления и последнего открытия) в БД по частям каждой книги юзера
   const UPDATE_USER_BOOK_PART_STATS = async (bookId, partId) => {
     try {
+      mainStore.SET_PROCESSING(true);
       const docRef = doc(db, "userData", `${userStore.userId}`);
 
       // если данная часть книги не открывалась, то добавляем дату открытия addedDate
@@ -113,12 +131,15 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       await getDocSnap(userStore.userId);
     } catch (error) {
       console.log(error);
+    } finally {
+      mainStore.SET_PROCESSING(false);
     }
   };
 
   // функция завершения работы с частью книги которая записывает рейтин и дату завершения в БД
   const FINISH_USER_BOOK_PART = async (bookId, partId, rating) => {
     try {
+      mainStore.SET_PROCESSING(true);
       const docRef = doc(db, "userData", `${userStore.userId}`);
 
       //  добавляем новое свойство finishedDate и выставленный рейтинг пользователем по окончании работы с частью книги
@@ -136,78 +157,98 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       await getDocSnap(userStore.userId);
     } catch (error) {
       console.log(error);
+    } finally {
+      mainStore.SET_PROCESSING(false);
     }
   };
 
   // функция добавления слов/выражений для изучения в профайл пользователя
 
   const ADD_USER_WORD = async (payload) => {
-    mainStore.SET_PROCESSING(true);
-    // создаем объект книги
-    let word = {
-      origText: payload.origText,
-      transText: payload.transText,
-      type: payload.type,
-      addedDate: new Date(),
-      bucket: 1,
-      nextShowDate: new Date(),
-    };
+    try {
+      mainStore.SET_PROCESSING(true);
 
-    if (payload.origArticle) {
-      word.origArticle = payload.origArticle;
-    }
-    await setDoc(
-      doc(db, "userData", `${userStore.userId}`),
-      {
-        words: {
-          [payload.key]: word,
-        },
-      },
-      { merge: true }
-    ).then(() => {
-      getDocSnap(userStore.userId);
-    });
-    mainStore.SET_PROCESSING(false);
-  };
+      // создаем объект книги
+      let word = {
+        origText: payload.origText,
+        transText: payload.transText,
+        type: payload.type,
+        addedDate: new Date(),
+        bucket: 1,
+        nextShowDate: new Date(),
+      };
 
-  // функция переноса слова с следующую корзину для изучения и выставления следующей даты показа юзеру
-  const PROCESS_USER_WORD = async (words, wordKey) => {
-    let word = userData.value.words[wordKey];
+      if (payload.origArticle) {
+        word.origArticle = payload.origArticle;
+      }
 
-    const docRef = doc(db, "userData", `${userStore.userId}`);
-
-    if (word.bucket === 5) {
-      await updateDoc(docRef, {
-        [`words.${wordKey}`]: deleteField(),
-      }).then(() => {
-        REMOVE_USER_WORD(words, wordKey);
-        UPDATE_CURRENT_WORD(words[0]);
-        getDocSnap(userStore.userId);
-      });
-    } else {
-      let wordBucket = word.bucket;
-      let nextDateToShowWord = new Date();
-
-      // выставляем следующую дату показа слова для изучения
-      nextDateToShowWord = new Date(
-        nextDateToShowWord.setDate(new Date().getDate() + word.bucket * 2)
-      );
-      // меняем поля в компоненте слов
-      word.nextShowDate = nextDateToShowWord;
-      word.bucket = wordBucket + 1;
-      await getDocSnap(userStore.userId);
-      // записываем в БД
       await setDoc(
         doc(db, "userData", `${userStore.userId}`),
         {
           words: {
-            [wordKey]: word,
+            [payload.key]: word,
           },
         },
         { merge: true }
-      ).then(() => {
-        getDocSnap(userStore.userId);
-      });
+      );
+
+      await getDocSnap(userStore.userId);
+    } catch (error) {
+      // Обработка ошибок
+      console.error(error);
+    } finally {
+      mainStore.SET_PROCESSING(false);
+    }
+  };
+
+  // функция переноса слова с следующую корзину для изучения и выставления следующей даты показа юзеру
+  const PROCESS_USER_WORD = async (words, wordKey) => {
+    try {
+      mainStore.SET_PROCESSING(true);
+      let word = userData.value.words[wordKey];
+
+      const docRef = doc(db, "userData", `${userStore.userId}`);
+
+      if (word.bucket === 5) {
+        await updateDoc(docRef, {
+          [`words.${wordKey}`]: deleteField(),
+        });
+
+        REMOVE_USER_WORD(words, wordKey);
+        UPDATE_CURRENT_WORD(words[0]);
+        await getDocSnap(userStore.userId);
+      } else {
+        let wordBucket = word.bucket;
+        let nextDateToShowWord = new Date();
+
+        // выставляем следующую дату показа слова для изучения
+        nextDateToShowWord = new Date(
+          nextDateToShowWord.setDate(new Date().getDate() + word.bucket * 2)
+        );
+        // меняем поля в компоненте слов
+        word.nextShowDate = nextDateToShowWord;
+        word.bucket = wordBucket + 1;
+
+        await getDocSnap(userStore.userId);
+
+        // записываем в БД
+        await setDoc(
+          doc(db, "userData", `${userStore.userId}`),
+          {
+            words: {
+              [wordKey]: word,
+            },
+          },
+          { merge: true }
+        );
+
+        await getDocSnap(userStore.userId);
+      }
+    } catch (error) {
+      // Обработка ошибок
+      console.error(error);
+    } finally {
+      mainStore.SET_PROCESSING(false);
     }
   };
 
