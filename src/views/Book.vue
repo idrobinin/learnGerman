@@ -27,10 +27,12 @@ import E404 from "@/views/E404.vue";
 import BookDetails from "@/components/BookDetails.vue";
 import BookPartListItem from "@/components/BookPartListItem.vue";
 import { useBooksStore } from "@/store/booksStore";
+import { useUserDataStore } from "@/store/userDataStore";
 import { useRoute } from "vue-router";
 import { getBookByBookId } from "@/hooks/getBookByBookId";
 
 const bookStore = useBooksStore();
+const userDataStore = useUserDataStore();
 const route = useRoute();
 
 // получаем книгу для отрисовки

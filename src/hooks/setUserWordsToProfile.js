@@ -5,7 +5,7 @@ import { Timestamp } from "firebase/firestore/lite";
 export const setWords = () => {
   const userDataStore = useUserDataStore();
   let userWordsInStore = userDataStore.userData.words;
-  userDataStore.userWords.value = [];
+  userDataStore.userWords.length = 0;
 
   for (let property in userWordsInStore) {
     if (userWordsInStore.hasOwnProperty(property)) {

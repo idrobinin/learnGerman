@@ -162,6 +162,6 @@ const addWord = async (word) => {
     snackbar.value = true;
     snackbarText.value = "Добавлено";
   }
-  checking.value = true;
+  checking.value = false;
 };
 </script>

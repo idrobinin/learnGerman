@@ -25,6 +25,25 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     books: {},
     words: {},
   });
+
+  // функция записи данных в объект Vue (делаем реактивным так как вью не видит изменения в БД) (берем новые данные в БД и записываем в объект)
+  const getDocSnap = async (userId) => {
+    try {
+      const docRef = doc(db, "userData", userId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        userData.value = docSnap.data();
+      } else {
+        // Обработка случая, когда документ не существует
+        userData.value = null;
+      }
+    } catch (error) {
+      // Обработка ошибок при получении документа
+      console.error(error);
+      userData.value = null;
+    }
+  };
+
   // функция
   const SET_USER_DATA = (data) => {
     userData.value = data;
@@ -81,7 +100,10 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         { merge: true }
       );
 
-      await getDocSnap(userStore.userId);
+      // обновляем стейт
+      const updatedUserData = { ...userData.value };
+      updatedUserData.books[bookId] = book;
+      userData.value = updatedUserData;
     } catch (error) {
       // Обработка ошибок
       console.error(error);
@@ -90,45 +112,28 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     }
   };
 
-  // функция записи данных в объект Vue (делаем реактивным так как вью не видит изменения в БД) (берем новые данные в БД и записываем в объект)
-  const getDocSnap = async (userId) => {
-    try {
-      const docRef = doc(db, "userData", userId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        userData.value = docSnap.data();
-      } else {
-        // Обработка случая, когда документ не существует
-        userData.value = null;
-      }
-    } catch (error) {
-      // Обработка ошибок при получении документа
-      console.error(error);
-      userData.value = null;
-    }
-  };
-
   // функция добавления и изменения статистики (дата добавления и последнего открытия) в БД по частям каждой книги юзера
+
   const UPDATE_USER_BOOK_PART_STATS = async (bookId, partId) => {
     try {
       mainStore.SET_PROCESSING(true);
       const docRef = doc(db, "userData", `${userStore.userId}`);
 
-      // если данная часть книги не открывалась, то добавляем дату открытия addedDate
-      const updatedFields = {};
+      // Если данная часть книги не открывалась, то добавляем дату открытия addedDate
       if (!userData.value.books[bookId].parts[partId]) {
-        updatedFields[`books.${bookId}.parts.${partId}.addedDate`] =
-          Timestamp.fromDate(new Date());
+        userData.value.books[bookId].parts[partId] = {
+          addedDate: Timestamp.fromDate(new Date()),
+        };
       }
-      // добавляем новое свойство lastOpenedDate
-      updatedFields[`books.${bookId}.parts.${partId}.lastOpenedDate`] =
+      // Добавляем новое свойство lastOpenedDate
+      userData.value.books[bookId].parts[partId].lastOpenedDate =
         Timestamp.fromDate(new Date());
 
-      // Обновляем все поля в одном вызове метода updateDoc()
-      await updateDoc(docRef, updatedFields);
-
-      // записываем все изменения в наш Vue oбъект userData
-      await getDocSnap(userStore.userId);
+      // Обновляем данные в Firestore
+      await updateDoc(docRef, {
+        [`books.${bookId}.parts.${partId}`]:
+          userData.value.books[bookId].parts[partId],
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -136,25 +141,25 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     }
   };
 
-  // функция завершения работы с частью книги которая записывает рейтин и дату завершения в БД
   const FINISH_USER_BOOK_PART = async (bookId, partId, rating) => {
     try {
       mainStore.SET_PROCESSING(true);
       const docRef = doc(db, "userData", `${userStore.userId}`);
 
-      //  добавляем новое свойство finishedDate и выставленный рейтинг пользователем по окончании работы с частью книги
+      // Добавляем finishedDate
+      if (!userData.value.books[bookId].parts[partId].finishedDate) {
+        userData.value.books[bookId].parts[partId].finishedDate =
+          Timestamp.fromDate(new Date());
+      }
 
-      const updatedFields = {
-        [`books.${bookId}.parts.${partId}.finishedDate`]: Timestamp.fromDate(
-          new Date()
-        ),
-        [`books.${bookId}.parts.${partId}.rating`]: rating,
-      };
+      // Добавляем rating
+      userData.value.books[bookId].parts[partId].rating = rating;
 
-      await updateDoc(docRef, updatedFields);
-
-      // записываем все изменения в наш Vue oбъект userData
-      await getDocSnap(userStore.userId);
+      // Обновляем данные в Firestore
+      await updateDoc(docRef, {
+        [`books.${bookId}.parts.${partId}`]:
+          userData.value.books[bookId].parts[partId],
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -167,6 +172,12 @@ export const useUserDataStore = defineStore("userDataStore", () => {
   const ADD_USER_WORD = async (payload) => {
     try {
       mainStore.SET_PROCESSING(true);
+
+      // // Проверяем, есть ли уже такое слово в массиве words
+      if (userData.value.words.hasOwnProperty(payload.key)) {
+        console.log("Слово уже существует");
+        return; // Возвращаемся из функции, чтобы избежать дублирования слов
+      }
 
       // создаем объект книги
       let word = {
@@ -191,8 +202,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         },
         { merge: true }
       );
-
-      await getDocSnap(userStore.userId);
+      userData.value.words[payload.key] = word;
     } catch (error) {
       // Обработка ошибок
       console.error(error);
@@ -228,8 +238,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         // меняем поля в компоненте слов
         word.nextShowDate = nextDateToShowWord;
         word.bucket = wordBucket + 1;
-
-        await getDocSnap(userStore.userId);
 
         // записываем в БД
         await setDoc(
