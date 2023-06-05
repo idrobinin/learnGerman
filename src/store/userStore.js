@@ -19,29 +19,36 @@ export const useUserStore = defineStore("userStore", () => {
     isAuthenticated: false,
     uid: null,
   });
+  // модель для функции отписки от события подписки onAuthStateChanged
+  const unsubscribeAuth = ref(null);
 
   const mainStore = useMainStore();
   const userDataStore = useUserDataStore();
   const router = useRouter();
   const auth = getAuth();
 
+  const SET_USER = (userData) => {
+    user.value = {
+      ...userData,
+      isAuthenticated: true,
+    };
+  };
+
+  // функция получения данных юзера если он авторизован и существует
   const INIT_AUTH = () => {
     return new Promise((resolve, reject) => {
-      onAuthStateChanged(auth, (user) => {
+      // если уже подписаны на событие onAuthStateChanged то отписываемся, чтобы не было множественных подписок(положив событие в переменную)
+      if (unsubscribeAuth.value) unsubscribeAuth.value();
+
+      let unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {
           SET_USER(user);
           userDataStore.LOAD_USER_DATA(user.uid);
         }
         resolve(user);
       });
+      unsubscribeAuth.value = unsubscribe;
     });
-  };
-
-  const SET_USER = (userData) => {
-    user.value = {
-      ...userData,
-      isAuthenticated: true,
-    };
   };
 
   const showSignoutDialog = ref(false);

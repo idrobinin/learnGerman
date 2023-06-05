@@ -27,24 +27,23 @@ export const useUserDataStore = defineStore("userDataStore", () => {
   });
 
   // функция записи данных в объект Vue (делаем реактивным так как вью не видит изменения в БД) (берем новые данные в БД и записываем в объект)
-  const getDocSnap = async (userId) => {
-    try {
-      const docRef = doc(db, "userData", userId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        userData.value = docSnap.data();
-      } else {
-        // Обработка случая, когда документ не существует
-        userData.value = null;
-      }
-    } catch (error) {
-      // Обработка ошибок при получении документа
-      console.error(error);
-      userData.value = null;
-    }
-  };
+  // const getDocSnap = async (userId) => {
+  //   try {
+  //     const docRef = doc(db, "userData", userId);
+  //     const docSnap = await getDoc(docRef);
+  //     if (docSnap.exists()) {
+  //       userData.value = docSnap.data();
+  //     } else {
+  //       // Обработка случая, когда документ не существует
+  //       userData.value = null;
+  //     }
+  //   } catch (error) {
+  //     // Обработка ошибок при получении документа
+  //     console.error(error);
+  //     userData.value = null;
+  //   }
+  // };
 
-  // функция
   const SET_USER_DATA = (data) => {
     userData.value = data;
   };
@@ -226,7 +225,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
 
         REMOVE_USER_WORD(words, wordKey);
         UPDATE_CURRENT_WORD(words[0]);
-        await getDocSnap(userStore.userId);
       } else {
         let wordBucket = word.bucket;
         let nextDateToShowWord = new Date();
@@ -249,8 +247,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
           },
           { merge: true }
         );
-
-        await getDocSnap(userStore.userId);
       }
     } catch (error) {
       // Обработка ошибок

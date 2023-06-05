@@ -76,7 +76,7 @@ router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
 
   // проверка требуется ли аутентификация пользователя для входа на роут
-  // сначала мы получаем юзера из БД, если он существует и затем рендерим нашу страницу
+  // сначала мы получаем юзера из БД ожидая промис, если он существует и затем рендерим нашу страницу
 
   userStore.INIT_AUTH().then((user) => {
     if (to.matched.some((route) => route.meta.requiresAuth)) {

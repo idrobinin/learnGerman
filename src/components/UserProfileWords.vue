@@ -73,9 +73,6 @@
       <div class="text-center text-h5 mb-3">
         Всего {{ userDataStore.userWords.length }}
       </div>
-      <div class="text-center text-h5 mb-3">
-        {{ userDataStore.userWords }}
-      </div>
 
       <v-card
         v-for="word in userDataStore.userWords"
