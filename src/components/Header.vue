@@ -39,7 +39,7 @@
         </v-app-bar-title>
       </router-link>
 
-      <confirmation-dialog v-if="showSignoutDialog" />
+      <confirmation-dialog v-if="userStore.showSignoutDialog" />
 
       <v-spacer></v-spacer>
 
@@ -52,7 +52,10 @@
           <v-icon size="large" class="mr-2" :icon="item.icon"></v-icon>
           {{ item.title }}
         </v-btn>
-        <v-btn @click.prevent="userStore.SIGN_OUT" v-if="isUserAuthenticated">
+        <v-btn
+          @click.prevent="userStore.showSignoutDialog = true"
+          v-if="isUserAuthenticated"
+        >
           <v-icon
             size="large"
             class="mr-2"
@@ -69,14 +72,12 @@
 import { ref, computed } from "vue";
 import { useUserStore } from "@/store/userStore";
 import ConfirmationDialog from "@/components/ExitConfirmationDialog.vue";
-
+const userStore = useUserStore();
 // модель для отображения мобильного или веб меню
 const drawer = ref(false);
 
 // модель окна подтверждения выхода юзера из аккаунта
-const showSignoutDialog = computed(() => userStore.showSignoutDialog);
 
-const userStore = useUserStore();
 const isUserAuthenticated = computed(() => userStore.isUserAuthenticated);
 
 // список кнопок меню

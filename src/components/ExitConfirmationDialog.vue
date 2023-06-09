@@ -10,7 +10,7 @@
             class="d-inline-block"
             color="green-darken-1"
             variant="text"
-            @click="unConfirmSignOut()"
+            @click="unConfirmSignOut"
           >
             Отменить
           </v-btn>
@@ -18,7 +18,7 @@
             class="d-inline-block"
             color="green-darken-1"
             variant="text"
-            @click="confirmSignOut()"
+            @click="confirmSignOut"
           >
             Выйти
           </v-btn>
@@ -31,23 +31,16 @@
 <script setup>
 import { ref } from "vue";
 import { useUserStore } from "@/store/userStore";
-import { useRouter } from "vue-router";
 const userStore = useUserStore();
 
-const router = useRouter();
-
 const dialog = ref(true);
-const confirmSignOut = () => {
-  userStore.SIGN_OUT();
+const confirmSignOut = async () => {
+  await userStore.SIGN_OUT();
   dialog.value = false;
-  userStore.showSignoutDialog = false;
-  userStore.user.isAuthenticated = false;
-  router.push({ name: "home" });
 };
 const unConfirmSignOut = () => {
   dialog.value = false;
   userStore.showSignoutDialog = false;
-  userStore.user.isAuthenticated = true;
 };
 </script>
 

@@ -26,24 +26,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     words: {},
   });
 
-  // функция записи данных в объект Vue (делаем реактивным так как вью не видит изменения в БД) (берем новые данные в БД и записываем в объект)
-  // const getDocSnap = async (userId) => {
-  //   try {
-  //     const docRef = doc(db, "userData", userId);
-  //     const docSnap = await getDoc(docRef);
-  //     if (docSnap.exists()) {
-  //       userData.value = docSnap.data();
-  //     } else {
-  //       // Обработка случая, когда документ не существует
-  //       userData.value = null;
-  //     }
-  //   } catch (error) {
-  //     // Обработка ошибок при получении документа
-  //     console.error(error);
-  //     userData.value = null;
-  //   }
-  // };
-
   const SET_USER_DATA = (data) => {
     userData.value = data;
   };

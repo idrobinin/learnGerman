@@ -1,5 +1,5 @@
 <template>
-  <change-user-data-dialog v-if="showChangeUserDataDialog" />
+  <change-user-data-dialog v-if="userStore.showChangeUserDataDialog" />
 
   <v-card v-else class="mx-auto bg-blue">
     <v-card-text>
@@ -35,10 +35,5 @@ const userName = computed(() => {
 });
 const userEmail = computed(() => {
   return userStore.user.email;
-});
-
-// модель для диалогового окна для изменения данных пользователя
-const showChangeUserDataDialog = computed(() => {
-  return userStore.showChangeUserDataDialog;
 });
 </script>

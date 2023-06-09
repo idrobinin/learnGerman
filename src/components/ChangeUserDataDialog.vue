@@ -69,6 +69,7 @@
           >
             Отмена
           </v-btn>
+
           <v-btn
             :disabled="!valid || processing"
             color="blue-darken-1"
@@ -135,7 +136,7 @@ const emailRules = [
 const error = computed(() => mainStore.getError);
 
 // модель для ongoing процесса регистрации
-const processing = computed(() => mainStore.getProcessing);
+const processing = computed(() => userStore.CHANGE_USER_DATA_PROCESSING);
 
 // функция изменения данных пользователя
 const changeUserData = async () => {

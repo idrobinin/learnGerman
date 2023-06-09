@@ -24,7 +24,7 @@
         :disabled="!password || !email || processing === true"
         color="success"
         class="mr-4"
-        @click.prevent="userStore.SIGNIN(email, password)"
+        @click.prevent="signIn"
       >
         Войти
       </v-btn>
@@ -47,6 +47,14 @@ const mainStore = useMainStore();
 const userStore = useUserStore();
 
 const error = computed(() => mainStore.getError);
+const valid = ref(false);
+
+// модель для ongoing процесса регистрации
+const processing = computed(() => userStore.SIGNIN_PROCESSING);
+
+const signIn = async () => {
+  await userStore.SIGNIN(email.value, password.value);
+};
 
 const password = ref("");
 const passRules = [
@@ -58,11 +66,6 @@ const emailRules = [
   (v) => !!v || "E-mail is required",
   (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ];
-
-const valid = ref(false);
-
-// модель для ongoing процесса регистрации
-const processing = computed(() => mainStore.getProcessing);
 </script>
 
 <style scoped></style>

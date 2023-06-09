@@ -40,7 +40,7 @@
         :disabled="!valid || !checkbox || processing"
         color="success"
         class="mr-4"
-        @click.prevent="userStore.SIGNUP(email, password, name)"
+        @click.prevent="signUp"
       >
         Зарегистрироваться
       </v-btn>
@@ -59,6 +59,10 @@ import { useMainStore } from "@/store/mainStore";
 
 const userStore = useUserStore();
 const mainStore = useMainStore();
+
+const signUp = async () => {
+  await userStore.SIGNUP(email.value, password.value, name.value);
+};
 
 const valid = computed(() => {
   return !!name.value && !!password.value && !!email.value;
@@ -92,7 +96,7 @@ const emailRules = [
 const error = computed(() => mainStore.getError);
 
 // модель для ongoing процесса регистрации
-const processing = computed(() => mainStore.getProcessing);
+const processing = computed(() => userStore.SIGNUP_PROCESSING);
 </script>
 
 <style scoped></style>

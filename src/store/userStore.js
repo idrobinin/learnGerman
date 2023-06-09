@@ -51,13 +51,11 @@ export const useUserStore = defineStore("userStore", () => {
     });
   };
 
-  const showSignoutDialog = ref(false);
-  const showChangeUserDataDialog = ref(false);
-
-  const SIGNUP = (email, password, name) => {
+  const SIGNUP_PROCESSING = ref(false);
+  const SIGNUP = async (email, password, name) => {
     mainStore.CLEAR_ERROR();
-    mainStore.SET_PROCESSING(true);
-    createUserWithEmailAndPassword(auth, email, password)
+    SIGNUP_PROCESSING.value = true;
+    await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
 
@@ -70,7 +68,7 @@ export const useUserStore = defineStore("userStore", () => {
           .catch((error) => {
             console.error(error);
             mainStore.SET_ERROR(error.message);
-            mainStore.SET_PROCESSING(false);
+            SIGNUP_PROCESSING.value = false;
           });
 
         SET_USER(user);
@@ -80,14 +78,15 @@ export const useUserStore = defineStore("userStore", () => {
         mainStore.SET_ERROR(error.message);
       })
       .finally(() => {
-        mainStore.SET_PROCESSING(false);
+        SIGNUP_PROCESSING.value = false;
       });
   };
 
-  const SIGNIN = (email, password) => {
+  const SIGNIN_PROCESSING = ref(false);
+  const SIGNIN = async (email, password) => {
     mainStore.CLEAR_ERROR();
-    mainStore.SET_PROCESSING(true);
-    signInWithEmailAndPassword(auth, email, password)
+    SIGNIN_PROCESSING.value = true;
+    await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         SET_USER(userCredential.user);
         router.push({ name: "profile" });
@@ -97,29 +96,33 @@ export const useUserStore = defineStore("userStore", () => {
         mainStore.SET_ERROR(errorMessage);
       })
       .finally(() => {
-        mainStore.SET_PROCESSING(false);
+        SIGNIN_PROCESSING.value = false;
       });
   };
 
-  const SIGN_OUT = () => {
+  const showSignoutDialog = ref(false);
+  const SIGN_OUT_PROCESSING = ref(false);
+  const SIGN_OUT = async () => {
     mainStore.CLEAR_ERROR();
-    mainStore.SET_PROCESSING(true);
-    signOut(auth)
+    SIGN_OUT_PROCESSING.value = true;
+    await signOut(auth)
       .then(() => {
+        user.value.isAuthenticated = false;
         console.log("you signed out");
-        mainStore.SET_PROCESSING(false);
+        showSignoutDialog.value = false;
+        router.push({ name: "home" });
       })
       .catch((error) => {
         const errorMessage = error.message;
         mainStore.SET_ERROR(errorMessage);
       })
       .finally(() => {
-        mainStore.SET_PROCESSING(false);
+        SIGN_OUT_PROCESSING.value = false;
       });
-
-    showSignoutDialog.value = true;
   };
 
+  const showChangeUserDataDialog = ref(false);
+  const CHANGE_USER_DATA_PROCESSING = ref(false);
   const CHANGE_USER_DATA_PROFILE = async (
     userId,
     newEmail,
@@ -129,7 +132,7 @@ export const useUserStore = defineStore("userStore", () => {
     currentEmail
   ) => {
     mainStore.CLEAR_ERROR();
-    mainStore.SET_PROCESSING(true);
+    CHANGE_USER_DATA_PROCESSING.value = true;
     const currentUser = auth.currentUser;
 
     try {
@@ -160,7 +163,7 @@ export const useUserStore = defineStore("userStore", () => {
       console.error(error);
       mainStore.SET_ERROR(error.message);
     } finally {
-      mainStore.SET_PROCESSING(false);
+      CHANGE_USER_DATA_PROCESSING.value = false;
     }
   };
 
@@ -173,6 +176,10 @@ export const useUserStore = defineStore("userStore", () => {
     showChangeUserDataDialog,
     user,
     userId,
+    SIGNUP_PROCESSING,
+    SIGNIN_PROCESSING,
+    SIGN_OUT_PROCESSING,
+    CHANGE_USER_DATA_PROCESSING,
     INIT_AUTH,
     SET_USER,
     SIGNUP,
