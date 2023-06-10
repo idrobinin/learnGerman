@@ -133,21 +133,19 @@
 <script setup>
 import { useBookLevel } from "@/hooks/useBookLevel";
 import { useUserStore } from "@/store/userStore";
-import { useMainStore } from "@/store/mainStore";
 import { useUserDataStore } from "@/store/userDataStore";
 
 const { getBookLevel } = useBookLevel();
 const userStore = useUserStore();
-const mainStore = useMainStore();
 const userDataStore = useUserDataStore();
 
 const isUserAuthenticated = userStore.isUserAuthenticated;
-const getProcessing = mainStore.getProcessing;
+const processing = userDataStore.ADD_USER_BOOK_PROCESSING;
 
 // отрабатывает если есть книга в базе юзера + он аутентифицирован + нет процессов
 const canLoadBook = (id) => {
   let book = getUserDataBook(id);
-  return getProcessing === false && isUserAuthenticated && !book;
+  return processing === false && isUserAuthenticated && !book;
 };
 
 // проверяем данные по наличию книги в списке загруженных у юзера в профайл в БД по id книги

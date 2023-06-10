@@ -101,13 +101,10 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useUserDataStore } from "@/store/userDataStore";
-import { useMainStore } from "@/store/mainStore";
 import OriginalWord from "@/components/OriginalWord.vue";
 
-const mainStore = useMainStore();
 const userDataStore = useUserDataStore();
-const processing = computed(() => mainStore.getProcessing);
-const checking = ref(false);
+const processing = computed(() => userDataStore.ADD_USER_WORD_PROCESSING);
 
 const props = defineProps({
   data: {
@@ -140,8 +137,6 @@ const snackbarText = ref("");
 
 // функция добавления слова в профайл юзера
 const addWord = async (word) => {
-  checking.value = true;
-
   let userWordsList = userDataStore.userData?.words || null;
   let wordAdded = null;
 
@@ -162,6 +157,5 @@ const addWord = async (word) => {
     snackbar.value = true;
     snackbarText.value = "Добавлено";
   }
-  checking.value = false;
 };
 </script>

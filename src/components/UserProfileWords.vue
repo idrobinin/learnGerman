@@ -55,6 +55,7 @@
           height="38px"
           color="#00CC00"
           rounded
+          :disabled="processingWord === true"
           class="border-sm text-none"
           @click="
             userDataStore.PROCESS_USER_WORD(
@@ -136,7 +137,7 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 import { useUserDataStore } from "@/store/userDataStore";
 import OriginalWord from "@/components/OriginalWord.vue";
 import { setWords } from "@/hooks/setUserWordsToProfile";
@@ -147,6 +148,10 @@ import { mdiVolumeHigh, mdiArrowUp } from "@mdi/js";
 const userDataStore = useUserDataStore();
 
 const ableToPronounce = ref(false);
+
+const processingWord = computed(
+  () => userDataStore.PROCESS_USER_WORD_PROCESSING
+);
 
 const checkAvailabilityToPronounceWords = () => {
   if (window.speechSynthesis) ableToPronounce.value = true;

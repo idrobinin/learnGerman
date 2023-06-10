@@ -33,9 +33,6 @@
 import { ref } from "vue";
 import UserProfileData from "@/components/UserProfileData.vue";
 import UserProfileWords from "@/components/UserProfileWords.vue";
-import { useUserDataStore } from "@/store/userDataStore";
-
-const userDataStore = useUserDataStore();
 
 // модель для табов
 const tabMode = ref("data");

@@ -33,7 +33,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
   // функция загрузки личных данных списка книг и слов одного юзера из БД для рендеринга Profile
   const LOAD_USER_DATA = async (userId) => {
     try {
-      const docRef = doc(db, "userData", `${userId}`);
+      const docRef = await doc(db, "userData", `${userId}`);
       const docSnap = await getDoc(docRef);
 
       // проверяем есть ли коллекция у данного юзера в базе по ID юзера
@@ -60,10 +60,11 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     }
   };
 
+  const ADD_USER_BOOK_PROCESSING = ref(false);
   // функция добавления книги в коллекцию юзера в базе данных  по переданному айди книги
   const ADD_USER_BOOK = async (bookId) => {
     try {
-      mainStore.SET_PROCESSING(true);
+      ADD_USER_BOOK_PROCESSING.value = true;
 
       // создаем объект книги
       let book = {
@@ -89,7 +90,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       // Обработка ошибок
       console.error(error);
     } finally {
-      mainStore.SET_PROCESSING(false);
+      ADD_USER_BOOK_PROCESSING.value = false;
     }
   };
 
@@ -97,8 +98,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
 
   const UPDATE_USER_BOOK_PART_STATS = async (bookId, partId) => {
     try {
-      mainStore.SET_PROCESSING(true);
-      const docRef = doc(db, "userData", `${userStore.userId}`);
+      const docRef = await doc(db, "userData", `${userStore.userId}`);
 
       // Если данная часть книги не открывалась, то добавляем дату открытия addedDate
       if (!userData.value.books[bookId].parts[partId]) {
@@ -117,15 +117,12 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       });
     } catch (error) {
       console.log(error);
-    } finally {
-      mainStore.SET_PROCESSING(false);
     }
   };
 
   const FINISH_USER_BOOK_PART = async (bookId, partId, rating) => {
     try {
-      mainStore.SET_PROCESSING(true);
-      const docRef = doc(db, "userData", `${userStore.userId}`);
+      const docRef = await doc(db, "userData", `${userStore.userId}`);
 
       // Добавляем finishedDate
       if (!userData.value.books[bookId].parts[partId].finishedDate) {
@@ -142,17 +139,15 @@ export const useUserDataStore = defineStore("userDataStore", () => {
           userData.value.books[bookId].parts[partId],
       });
     } catch (error) {
-      console.log(error);
-    } finally {
-      mainStore.SET_PROCESSING(false);
+      console.error(error);
     }
   };
 
   // функция добавления слов/выражений для изучения в профайл пользователя
-
+  const ADD_USER_WORD_PROCESSING = ref(false);
   const ADD_USER_WORD = async (payload) => {
     try {
-      mainStore.SET_PROCESSING(true);
+      ADD_USER_WORD_PROCESSING.value = true;
 
       // // Проверяем, есть ли уже такое слово в массиве words
       if (userData.value.words.hasOwnProperty(payload.key)) {
@@ -188,14 +183,15 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       // Обработка ошибок
       console.error(error);
     } finally {
-      mainStore.SET_PROCESSING(false);
+      ADD_USER_WORD_PROCESSING.value = false;
     }
   };
 
   // функция переноса слова с следующую корзину для изучения и выставления следующей даты показа юзеру
+  const PROCESS_USER_WORD_PROCESSING = ref(false);
   const PROCESS_USER_WORD = async (words, wordKey) => {
     try {
-      mainStore.SET_PROCESSING(true);
+      PROCESS_USER_WORD_PROCESSING.value = true;
       let word = userData.value.words[wordKey];
 
       const docRef = doc(db, "userData", `${userStore.userId}`);
@@ -234,7 +230,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
       // Обработка ошибок
       console.error(error);
     } finally {
-      mainStore.SET_PROCESSING(false);
+      PROCESS_USER_WORD_PROCESSING.value = false;
     }
   };
 
@@ -283,6 +279,9 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     userWords,
     currentWord,
     userData,
+    ADD_USER_BOOK_PROCESSING,
+    ADD_USER_WORD_PROCESSING,
+    PROCESS_USER_WORD_PROCESSING,
     UPDATE_USER_PROFILE_WORDS,
     UPDATE_CURRENT_WORD,
     PROCESS_USER_WORD,
