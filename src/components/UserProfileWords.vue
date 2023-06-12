@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userDataStore.userWords.length">
+  <div v-if="userDataStore.userWordsInProfile.length">
     <!--    секция текущего слова для изучения      -->
     <v-card class="mb-5 border-md" color="#CCFFFF">
       <v-card-item>
@@ -59,7 +59,7 @@
           class="border-sm text-none"
           @click="
             userDataStore.PROCESS_USER_WORD(
-              userDataStore.userWords,
+              userDataStore.userWordsInProfile,
               userDataStore.currentWord.key
             )
           "
@@ -69,14 +69,15 @@
       </v-card-actions>
     </v-card>
 
+    {{ userDataStore.userWords1 }}
     <!--    список всех добавленных слов    -->
     <div>
       <div class="text-center text-h5 mb-3">
-        Всего {{ userDataStore.userWords.length }}
+        Всего {{ userDataStore.userWordsInProfile.length }}
       </div>
 
       <v-card
-        v-for="word in userDataStore.userWords"
+        v-for="word in userDataStore.userWordsInProfile"
         :key="word.key"
         class="mb-1"
       >
@@ -163,7 +164,7 @@ const setWordAsCurrent = (word) => {
 };
 
 onBeforeMount(() => {
-  setWords(userDataStore.userWords);
+  setWords();
   checkAvailabilityToPronounceWords();
 });
 </script>

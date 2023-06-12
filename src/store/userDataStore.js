@@ -18,13 +18,15 @@ const defaultUserData = {
 };
 
 export const useUserDataStore = defineStore("userDataStore", () => {
-  const mainStore = useMainStore();
   const userStore = useUserStore();
 
   let userData = ref({
     books: {},
     words: {},
   });
+
+  // модель массива для отрисовки слов юзера в компонент
+  const userWordsInProfile = ref([]);
 
   const SET_USER_DATA = (data) => {
     userData.value = data;
@@ -249,24 +251,21 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     }
   };
 
-  // модель массива для отрисовки слов юзера в компонент
-  const userWords = ref([]);
-
-  // добавляем слова в массив для отрисовки из БД
-  const UPDATE_USER_PROFILE_WORDS = (word) => {
-    userWords.value.push({
-      origText: word.origText,
-      transText: word.transText,
-      origArticle: word.origArticle ? word.origArticle : null,
-      type: word.type ? word.type : null,
-      key: word.origArticle
-        ? `${word.origArticle}${word.origText}`
-            .toLowerCase()
-            .split(" ")
-            .join("")
-        : `${word.origText}`.toLowerCase().split(" ").join(""),
-    });
-  };
+  // // добавляем слова в массив для отрисовки из БД
+  // const UPDATE_USER_PROFILE_WORDS = (word) => {
+  //   userWords.value.push({
+  //     origText: word.origText,
+  //     transText: word.transText,
+  //     origArticle: word.origArticle ? word.origArticle : null,
+  //     type: word.type ? word.type : null,
+  //     key: word.origArticle
+  //       ? `${word.origArticle}${word.origText}`
+  //           .toLowerCase()
+  //           .split(" ")
+  //           .join("")
+  //       : `${word.origText}`.toLowerCase().split(" ").join(""),
+  //   });
+  // };
 
   // модель текущего слова в профиле юзера
   const currentWord = ref(null);
@@ -276,13 +275,12 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     currentWord.value = word;
   };
   return {
-    userWords,
+    userWordsInProfile,
     currentWord,
     userData,
     ADD_USER_BOOK_PROCESSING,
     ADD_USER_WORD_PROCESSING,
     PROCESS_USER_WORD_PROCESSING,
-    UPDATE_USER_PROFILE_WORDS,
     UPDATE_CURRENT_WORD,
     PROCESS_USER_WORD,
     LOAD_USER_DATA,

@@ -1,15 +1,17 @@
 import { useUserDataStore } from "@/store/userDataStore";
 import { Timestamp } from "firebase/firestore/lite";
+import { updateWords } from "@/hooks/updateUserProfileWords";
 
 // получаем все уровни языка книг в один массив
 export const setWords = () => {
   const userDataStore = useUserDataStore();
   let userWordsInStore = userDataStore.userData.words;
-  userDataStore.userWords.length = 0;
+  userDataStore.userWordsInProfile.length = 0;
 
   for (let property in userWordsInStore) {
     if (userWordsInStore.hasOwnProperty(property)) {
       let word = userWordsInStore[property];
+
       let isWordAvailableToShow;
 
       if (word.nextShowDate instanceof Timestamp) {
@@ -30,13 +32,14 @@ export const setWords = () => {
       // заполняем наш массив словами
 
       if (isWordAvailableToShow) {
-        userDataStore.UPDATE_USER_PROFILE_WORDS(word);
+        // userDataStore.UPDATE_USER_PROFILE_WORDS(word);
+        updateWords(userDataStore.userWordsInProfile, word);
       }
     }
   }
 
   // показываем первое слово из списка юзеру
-  if (userDataStore.userWords.length) {
-    userDataStore.UPDATE_CURRENT_WORD(userDataStore.userWords[0]);
+  if (userDataStore.userWordsInProfile.length) {
+    userDataStore.UPDATE_CURRENT_WORD(userDataStore.userWordsInProfile[0]);
   }
 };
