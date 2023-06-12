@@ -30,6 +30,7 @@ import { computed } from "vue";
 import ChangeUserDataDialog from "@/components/ChangeUserDataDialog.vue";
 
 const userStore = useUserStore();
+
 const userName = computed(() => {
   return userStore.user.displayName;
 });

@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useMainStore } from "@/store/mainStore";
 import { useUserStore } from "@/store/userStore";
 import {
   doc,
@@ -58,7 +57,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
         SET_USER_DATA(fetchedUserData);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -118,7 +117,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
           userData.value.books[bookId].parts[partId],
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -273,6 +272,7 @@ export const useUserDataStore = defineStore("userDataStore", () => {
   // изменяем текущее слово при изменении его в массиве или окончании изучения
   const UPDATE_CURRENT_WORD = (word) => {
     currentWord.value = word;
+    currentWord.value.showTranslation = false;
   };
   return {
     userWordsInProfile,

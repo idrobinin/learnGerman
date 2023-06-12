@@ -69,7 +69,6 @@
       </v-card-actions>
     </v-card>
 
-    {{ userDataStore.userWords1 }}
     <!--    список всех добавленных слов    -->
     <div>
       <div class="text-center text-h5 mb-3">
@@ -81,7 +80,10 @@
         :key="word.key"
         class="mb-1"
       >
-        <div v-if="userDataStore.currentWord.key != word.key" class="border-sm">
+        <div
+          v-if="userDataStore.currentWord.key !== word.key"
+          class="border-sm"
+        >
           <v-card-item>
             <original-word :word="word" />
             <v-divider />
@@ -168,21 +170,3 @@ onBeforeMount(() => {
   checkAvailabilityToPronounceWords();
 });
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-move {
-  transition: all 0.3s ease;
-}
-.fade-leave {
-  transition: all 0.3s ease;
-}
-</style>

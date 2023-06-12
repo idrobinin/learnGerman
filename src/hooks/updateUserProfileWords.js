@@ -9,5 +9,4 @@ export const updateWords = (userWords, word) => {
       ? `${word.origArticle}${word.origText}`.toLowerCase().split(" ").join("")
       : `${word.origText}`.toLowerCase().split(" ").join(""),
   });
-  return userWords;
 };
