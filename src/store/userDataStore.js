@@ -250,22 +250,6 @@ export const useUserDataStore = defineStore("userDataStore", () => {
     }
   };
 
-  // // добавляем слова в массив для отрисовки из БД
-  // const UPDATE_USER_PROFILE_WORDS = (word) => {
-  //   userWords.value.push({
-  //     origText: word.origText,
-  //     transText: word.transText,
-  //     origArticle: word.origArticle ? word.origArticle : null,
-  //     type: word.type ? word.type : null,
-  //     key: word.origArticle
-  //       ? `${word.origArticle}${word.origText}`
-  //           .toLowerCase()
-  //           .split(" ")
-  //           .join("")
-  //       : `${word.origText}`.toLowerCase().split(" ").join(""),
-  //   });
-  // };
-
   // модель текущего слова в профиле юзера
   const currentWord = ref(null);
 

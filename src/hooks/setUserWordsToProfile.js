@@ -32,7 +32,6 @@ export const setWords = () => {
       // заполняем наш массив словами
 
       if (isWordAvailableToShow) {
-        // userDataStore.UPDATE_USER_PROFILE_WORDS(word);
         updateWords(userDataStore.userWordsInProfile, word);
       }
     }
