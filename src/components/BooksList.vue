@@ -7,16 +7,21 @@
           <v-layout class="hidden-sm-and-down">
             <!--      поиск по названию и описанию    -->
             <v-col sm="9" md="8">
-              <v-text-field label="поиск" v-model="searchQuery"></v-text-field>
+              <v-text-field
+                label="поиск"
+                variant="outlined"
+                v-model="searchQuery"
+              ></v-text-field>
             </v-col>
             <!--      поиск по уровню    -->
             <v-col sm="3" md="4">
-              <v-select
+              <v-combobox
+                clearable
+                variant="outlined"
                 label="сложность"
                 :items="booksLevelsList"
                 v-model="selectedOption"
-              >
-              </v-select>
+              ></v-combobox>
             </v-col>
           </v-layout>
         </v-container>
@@ -28,18 +33,23 @@
           <v-layout>
             <!--      поиск по названию и описанию    -->
             <v-col>
-              <v-text-field label="поиск" v-model="searchQuery"></v-text-field>
+              <v-text-field
+                label="поиск"
+                variant="outlined"
+                v-model="searchQuery"
+              ></v-text-field>
             </v-col>
           </v-layout>
           <!--      поиск по уровню    -->
           <v-layout>
             <v-col>
-              <v-select
-                label="сложность"
+              <v-combobox
+                clearable
+                variant="outlined"
+                label="Combobox"
                 :items="booksLevelsList"
                 v-model="selectedOption"
-              >
-              </v-select>
+              ></v-combobox>
             </v-col>
           </v-layout>
         </v-container>
