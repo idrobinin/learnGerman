@@ -2,7 +2,7 @@
   <div class="d-flex justify-center">
     <div>
       <v-footer :fixed="true" :border="true">
-        <span>FOOTER &copy;2020</span>
+        <span>Deutch &copy;2023</span>
       </v-footer>
     </div>
   </div>

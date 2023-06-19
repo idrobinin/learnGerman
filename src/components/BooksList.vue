@@ -46,7 +46,7 @@
               <v-combobox
                 clearable
                 variant="outlined"
-                label="Combobox"
+                label="сложность"
                 :items="booksLevelsList"
                 v-model="selectedOption"
               ></v-combobox>
