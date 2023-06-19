@@ -1,7 +1,6 @@
 <template>
-  <section>
+  <section class="h-50">
     <v-parallax
-      class="h-75"
       src="https://firebasestorage.googleapis.com/v0/b/learn-german-8bfa3.appspot.com/o/HomeHeaderImg.jpg?alt=media&token=eb127f89-fa80-41e4-af1a-4611269d478e"
     >
       <div
@@ -12,7 +11,7 @@
       </div>
     </v-parallax>
   </section>
-  <section class="tips-section" ref="tipsSection">
+  <section class="tips-section">
     <div>
       <v-container>
         <v-row align="center" no-gutters style="height: 300px">
@@ -74,34 +73,36 @@
     <div class="mb-16 mx-10">
       <v-timeline direction="vertical">
         <v-timeline-item>
-          <template v-slot:opposite> Opposite content </template>
-          <div>
-            <div class="text-h6">Content title</div>
+          <template v-slot:opposite> Первый шаг </template>
+          <div class="timeline-item" ref="timeLineSection1">
+            <div class="text-h6">Начало обучения</div>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Выбирай любую книгу подходящую именно тебе по уровню и по
+              сожержанию для старта изучения любимого языка.
             </p>
           </div>
         </v-timeline-item>
 
         <v-timeline-item>
-          <template v-slot:opposite> Opposite content </template>
-          <div>
-            <div class="text-h6">Content title</div>
+          <template v-slot:opposite> Второй шаг </template>
+          <div class="timeline-item" ref="timeLineSection2">
+            <div class="text-h6">Процесс обучения</div>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Читай, пользуйся подсказками, добавляй слова для изученя в свой
+              профайл. После прочтения, выбирай новую и более сложную для себя
+              литературу для прогресса в обучении.
             </p>
           </div>
         </v-timeline-item>
 
         <v-timeline-item>
-          <template v-slot:opposite> Opposite content </template>
-          <div>
-            <div class="text-h6">Content title</div>
+          <template v-slot:opposite> Третий шаг </template>
+          <div class="timeline-item" ref="timeLineSection3">
+            <div class="text-h6">Не останавливайся</div>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Читай без подсказок и переводи самостоятельно. Обращай внимание на
+              все нюансы языка и практикуйся в произношении. Смотри видео с
+              субтирами и без.
             </p>
           </div>
         </v-timeline-item>
@@ -112,19 +113,16 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-const tipsSection = ref(null);
+const timeLineSection3 = ref(null);
+const timeLineSection2 = ref(null);
+const timeLineSection1 = ref(null);
 
 onMounted(() => {
-  console.log(tipsSection.value);
-  //   const tipsSection = ref(null);
-  //   const { value } = toRefs(tipsSection);
   const animateTipsSection = (entries, observer) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        if (entry.intersectionRatio >= 0.75) {
-          entry.target.classList.add("show");
-          console.log(entry.target);
-        }
+        entry.target.classList.add("show");
+        console.log(entry.target);
 
         observer.unobserve(entry.target);
       }
@@ -133,7 +131,9 @@ onMounted(() => {
 
   const observer = new IntersectionObserver(animateTipsSection, {});
 
-  observer.observe(tipsSection.value);
+  observer.observe(timeLineSection1.value);
+  observer.observe(timeLineSection2.value);
+  observer.observe(timeLineSection3.value);
 });
 </script>
 
@@ -150,13 +150,13 @@ onMounted(() => {
   transform: scale(1);
 }
 
-.tips-section {
+.timeline-item {
   opacity: 1;
   transform: translateY(150px);
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.tips-section.show {
+.timeline-item.show {
   opacity: 1;
   transform: translateY(0);
 }
