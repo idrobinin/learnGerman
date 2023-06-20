@@ -8,9 +8,9 @@
         show-arrows
       >
         <v-slide-group-item
-          v-for="book in bookStore.books"
+          v-for="book in shuffledBooks"
           :key="book.id"
-          v-slot="{ isSelected, toggle, selectedClass }"
+          v-slot="{ isSelected, selectedClass }"
         >
           <v-card
             color="grey-lighten-1"
@@ -23,6 +23,7 @@
               :width="300"
               aspect-ratio="16/9"
               cover
+              :lazy-src="`${book.imageUrl}`"
               :src="`${book.imageUrl}`"
             ></v-img>
             <div class="d-flex fill-height align-center justify-center">
@@ -51,10 +52,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useBooksStore } from "@/store/booksStore";
 
 const bookStore = useBooksStore();
+
+const shuffledBooks = computed(() => {
+  let books = bookStore.books;
+  return books.sort(() => 0.5 - Math.random());
+});
 
 const model = ref(null);
 const showDescription = ref(false);

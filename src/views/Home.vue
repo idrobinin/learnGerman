@@ -1,8 +1,9 @@
 <template>
   <div style="height: fit-content">
-    <section class="h-50">
+    <section style="max-height: 75vh">
       <v-parallax
         src="https://firebasestorage.googleapis.com/v0/b/learn-german-8bfa3.appspot.com/o/HomeHeaderImg.jpg?alt=media&token=eb127f89-fa80-41e4-af1a-4611269d478e"
+        lazy-src="https://firebasestorage.googleapis.com/v0/b/learn-german-8bfa3.appspot.com/o/HomeHeaderImg.jpg?alt=media&token=eb127f89-fa80-41e4-af1a-4611269d478e"
       >
         <div
           class="d-flex flex-column fill-height justify-center align-center text-white"
