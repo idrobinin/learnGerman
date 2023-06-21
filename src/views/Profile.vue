@@ -2,7 +2,7 @@
   <div class="profile">
     <v-container>
       <v-layout class="d-flex flex-wrap">
-        <v-col sm="12" md="10" offset-md="1">
+        <v-col cols="10" offset="1">
           <v-tabs v-model="tabMode" fixed-tabs>
             <v-tab v-for="tab in tabs" :value="tab.key" :key="tab.key">
               {{ tab.name }}
@@ -17,7 +17,9 @@
               </v-window-item>
 
               <!--    часть с книгами   -->
-              <v-window-item value="books">Мои книги </v-window-item>
+              <v-window-item value="books">
+                <books-list />
+              </v-window-item>
 
               <!--    часть со словами    -->
               <v-window-item value="words">
@@ -35,6 +37,10 @@
 import { ref } from "vue";
 import UserProfileData from "@/components/UserProfileData.vue";
 import UserProfileWords from "@/components/UserProfileWords.vue";
+import { useUserDataStore } from "@/store/userDataStore";
+import BooksList from "@/components/BooksList.vue";
+
+const userDataStore = useUserDataStore();
 
 // модель для табов
 const tabMode = ref("data");

@@ -19,12 +19,11 @@
           <v-row align="center" no-gutters style="height: 300px">
             <v-col cols="12" sm="6" md="4">
               <v-card
-                class="mx-2 my-2"
+                class="mx-2 my-2 info-card"
                 color="#63bcf9"
                 theme="dark"
                 prepend-icon="mdi-book"
                 title="Читай книги"
-                height="230"
                 v-ripple
               >
                 <v-card-text class="text-body-1 py-2">
@@ -35,12 +34,11 @@
             </v-col>
             <v-col cols="12" sm="6" md="4">
               <v-card
-                class="mx-2 my-2"
+                class="mx-2 my-2 info-card"
                 color="#63bcf9"
                 theme="dark"
                 prepend-icon="mdi-check"
                 title="Учи слова"
-                height="230"
                 v-ripple
               >
                 <v-card-text class="text-body-1 py-2">
@@ -52,12 +50,11 @@
             </v-col>
             <v-col cols="12" sm="12" md="4">
               <v-card
-                class="mx-2 my-2"
+                class="mx-2 my-2 info-card"
                 color="#63bcf9"
                 theme="dark"
                 prepend-icon="mdi-window-restore"
                 title="Учись на любом устройстве"
-                height="230"
                 v-ripple
               >
                 <v-card-text class="text-body-1 py-2">
@@ -129,7 +126,6 @@ onMounted(() => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add("show");
-        console.log(entry.target);
 
         observer.unobserve(entry.target);
       }
@@ -168,14 +164,25 @@ onMounted(() => {
   transform: translateY(0);
 }
 
+.info-card {
+  height: 230px;
+  font-size: 1em;
+}
+
 @media screen and (max-width: 959px) {
   .tips-section {
-    height: 530px !important;
+    height: 490px;
+  }
+  .info-card {
+    height: 195px;
   }
 }
 @media screen and (max-width: 599px) {
   .tips-section {
-    height: 780px !important;
+    height: 610px;
+  }
+  .info-card {
+    height: 170px;
   }
 }
 </style>

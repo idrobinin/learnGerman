@@ -1,7 +1,7 @@
 <template>
   <!--           элемент для больших экранов больше 1000          -->
   <v-card class="bg-blue">
-    <v-container fluid class="hidden-sm-and-down">
+    <v-container class="hidden-sm-and-down">
       <v-layout class="d-flex">
         <v-col sm="4" lg="3">
           <v-img
@@ -50,6 +50,7 @@
               <span> ({{ book.ratingsCount }}) </span>
             </div>
             <v-spacer></v-spacer>
+
             <router-link
               style="width: 100px"
               class="text-decoration-none px-4 py-2 text-center text-blue rounded-lg bg-yellow d-block"
