@@ -11,7 +11,7 @@
 
           <v-card-text>
             <!--        часть с данными пользователя        -->
-            <v-window v-model="tabMode">
+            <v-window v-model="tabMode" class="w-75 mx-auto">
               <v-window-item value="data">
                 <user-profile-data />
               </v-window-item>
@@ -37,10 +37,7 @@
 import { ref } from "vue";
 import UserProfileData from "@/components/UserProfileData.vue";
 import UserProfileWords from "@/components/UserProfileWords.vue";
-import { useUserDataStore } from "@/store/userDataStore";
 import BooksList from "@/components/BooksList.vue";
-
-const userDataStore = useUserDataStore();
 
 // модель для табов
 const tabMode = ref("data");

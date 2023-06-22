@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <v-container>
     <books-list />
-  </div>
+  </v-container>
 </template>
 
 <script setup>
