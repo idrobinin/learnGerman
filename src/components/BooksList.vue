@@ -69,6 +69,13 @@ import { useSortedAndFilteredBooks } from "@/hooks/useSortedAndFilteredBooks";
 import { getAllBooksLevels } from "@/hooks/getAllBooksLevels";
 import BooksListItem from "@/components/BooksListItem.vue";
 
+const props = defineProps({
+  onlyAddedToProfile: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const bookStore = useBooksStore();
 
 //  список доступных уровней языка для чтения
@@ -78,6 +85,8 @@ const { booksLevelsList } = getAllBooksLevels(bookStore.books);
 const { searchQuery, filteredBooks } = useFilteredBooks(bookStore.books);
 
 // список отфильтрованных книг по нескольким параметрам и уровню языка
-const { selectedOption, sortedAndFilteredBooks } =
-  useSortedAndFilteredBooks(filteredBooks);
+const { selectedOption, sortedAndFilteredBooks } = useSortedAndFilteredBooks(
+  filteredBooks,
+  props.onlyAddedToProfile
+);
 </script>

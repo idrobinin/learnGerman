@@ -18,7 +18,7 @@
 
               <!--    часть с книгами   -->
               <v-window-item value="books">
-                <books-list />
+                <books-list :onlyAddedToProfile="true" />
               </v-window-item>
 
               <!--    часть со словами    -->

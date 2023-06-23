@@ -1,71 +1,67 @@
 <template>
-  <div>
-    <!--    mobile nav bar-->
-    <v-navigation-drawer
-      absolute
-      temporary
-      v-model="drawer"
+  <!--    mobile nav bar-->
+  <v-navigation-drawer
+    absolute
+    temporary
+    v-model="drawer"
+    class="hidden-md-and-up w-100"
+  >
+    <v-list density="compact">
+      <v-list-item
+        v-for="(item, i) in menuItems"
+        :key="i"
+        :value="item"
+        active-color="primary"
+        :to="{ name: `${item.route}` }"
+      >
+        <template v-slot:prepend>
+          <v-icon :icon="item.icon"></v-icon>
+        </template>
+
+        <v-list-item-title>{{ item.title }}</v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
+
+  <!--    main bar-->
+
+  <v-app-bar app :elevation="8" class="bg-primary text-h6 font-weight-bold">
+    <v-app-bar-nav-icon
+      @click.stop="drawer = !drawer"
       class="hidden-md-and-up"
-    >
-      <v-list density="compact">
-        <v-list-item
-          v-for="(item, i) in menuItems"
-          :key="i"
-          :value="item"
-          active-color="primary"
-          :to="{ name: `${item.route}` }"
-        >
-          <template v-slot:prepend>
-            <v-icon :icon="item.icon"></v-icon>
-          </template>
+    ></v-app-bar-nav-icon>
+    <router-link :to="{ name: 'home' }" class="text-decoration-none">
+      <v-app-bar-title class="ml-3 text-h6 font-weight-bold text-shades-white">
+        Ich Lerne Deusch
+      </v-app-bar-title>
+    </router-link>
 
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+    <confirmation-dialog v-if="userStore.showSignoutDialog" />
 
-    <!--    main bar-->
+    <v-spacer></v-spacer>
 
-    <v-app-bar app :elevation="8" class="bg-primary text-h6 font-weight-bold">
-      <v-app-bar-nav-icon
-        @click.stop="drawer = !drawer"
-        class="hidden-md-and-up"
-      ></v-app-bar-nav-icon>
-      <router-link :to="{ name: 'home' }" class="text-decoration-none">
-        <v-app-bar-title
-          class="ml-3 text-h6 font-weight-bold text-shades-white"
-        >
-          Ich Lerne Deusch
-        </v-app-bar-title>
-      </router-link>
-
-      <confirmation-dialog v-if="userStore.showSignoutDialog" />
-
-      <v-spacer></v-spacer>
-
-      <v-toolbar-items variant="tonal" class="hidden-sm-and-down">
-        <v-btn
-          v-for="(item, i) in menuItems"
-          :key="`${item.title}${i}`"
-          :to="{ name: `${item.route}` }"
-        >
-          <v-icon size="large" class="mr-2" :icon="item.icon"></v-icon>
-          {{ item.title }}
-        </v-btn>
-        <v-btn
-          @click.prevent="userStore.showSignoutDialog = true"
-          v-if="isUserAuthenticated"
-        >
-          <v-icon
-            size="large"
-            class="mr-2"
-            icon="mdi-account-arrow-left"
-          ></v-icon>
-          Выйти
-        </v-btn>
-      </v-toolbar-items>
-    </v-app-bar>
-  </div>
+    <v-toolbar-items variant="tonal" class="hidden-sm-and-down">
+      <v-btn
+        v-for="(item, i) in menuItems"
+        :key="`${item.title}${i}`"
+        :to="{ name: `${item.route}` }"
+      >
+        <v-icon size="large" class="mr-2" :icon="item.icon"></v-icon>
+        {{ item.title }}
+      </v-btn>
+      <v-btn
+        @click.prevent="userStore.showSignoutDialog = true"
+        v-if="isUserAuthenticated"
+      >
+        <v-icon
+          size="large"
+          class="mr-2"
+          icon="mdi-account-arrow-left"
+        ></v-icon>
+        Выйти
+      </v-btn>
+    </v-toolbar-items>
+  </v-app-bar>
 </template>
 
 <script setup>
