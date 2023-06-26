@@ -73,7 +73,7 @@
         <v-timeline direction="vertical">
           <v-timeline-item>
             <template v-slot:opposite> Первый шаг </template>
-            <div class="timeline-item" ref="timeLineSection1">
+            <div class="timeline-item">
               <div class="text-h6">Начало обучения</div>
               <p>
                 Выбирай любую книгу подходящую именно тебе по уровню и по
@@ -84,7 +84,7 @@
 
           <v-timeline-item>
             <template v-slot:opposite> Второй шаг </template>
-            <div class="timeline-item" ref="timeLineSection2">
+            <div class="timeline-item">
               <div class="text-h6">Процесс обучения</div>
               <p>
                 Читай, пользуйся подсказками, добавляй слова для изученя в свой
@@ -96,7 +96,7 @@
 
           <v-timeline-item>
             <template v-slot:opposite> Третий шаг </template>
-            <div class="timeline-item" ref="timeLineSection3">
+            <div class="timeline-item">
               <div class="text-h6">Не останавливайся</div>
               <p>
                 Читай без подсказок и переводи самостоятельно. Обращай внимание
@@ -108,7 +108,7 @@
         </v-timeline>
       </div>
     </section>
-    <section>
+    <section class="carousel" ref="carouselSection">
       <RandomBooksCarousel />
     </section>
   </div>
@@ -117,9 +117,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import RandomBooksCarousel from "@/components/RandomBooksCarousel.vue";
-const timeLineSection3 = ref(null);
-const timeLineSection2 = ref(null);
-const timeLineSection1 = ref(null);
+const carouselSection = ref(null);
 
 onMounted(() => {
   const animateTipsSection = (entries, observer) => {
@@ -134,15 +132,12 @@ onMounted(() => {
 
   const observer = new IntersectionObserver(animateTipsSection, {});
 
-  observer.observe(timeLineSection1.value);
-  observer.observe(timeLineSection2.value);
-  observer.observe(timeLineSection3.value);
+  observer.observe(carouselSection.value);
 });
 </script>
 
 <style scoped>
 .title {
-  cursor: pointer;
   transition: transform 0.4s;
 }
 .title:hover {
@@ -153,13 +148,13 @@ onMounted(() => {
   transform: scale(1);
 }
 
-.timeline-item {
+.carousel {
   opacity: 1;
   transform: translateY(150px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 1s ease, transform 0.5s ease;
 }
 
-.timeline-item.show {
+.carousel.show {
   opacity: 1;
   transform: translateY(0);
 }
