@@ -13,60 +13,61 @@
         </div>
       </v-parallax>
     </section>
-    <section class="tips-section">
-      <div>
-        <v-container>
-          <v-row align="center" no-gutters style="height: 300px">
-            <v-col cols="12" sm="6" md="4">
-              <v-card
-                class="mx-2 my-2 info-card"
-                color="#63bcf9"
-                theme="dark"
-                prepend-icon="mdi-book"
-                title="Читай книги"
-                v-ripple
-              >
-                <v-card-text class="text-body-1 py-2">
-                  Читай адаптированные и не адаптированне немецкие книги, слушай
-                  песни и сказки , выбирай то, что нравится именно тебе
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-card
-                class="mx-2 my-2 info-card"
-                color="#63bcf9"
-                theme="dark"
-                prepend-icon="mdi-check"
-                title="Учи слова"
-                v-ripple
-              >
-                <v-card-text class="text-body-1 py-2">
-                  Каждый текст собержит набор самых интересных и важных слов,
-                  которые ты можешь добавить в свой личный кабинет для
-                  дальнейшего изучения.
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" sm="12" md="4">
-              <v-card
-                class="mx-2 my-2 info-card"
-                color="#63bcf9"
-                theme="dark"
-                prepend-icon="mdi-window-restore"
-                title="Учись на любом устройстве"
-                v-ripple
-              >
-                <v-card-text class="text-body-1 py-2">
-                  Этот веб сайт адаптирован для работы на любом устройстве.
-                  Учись со своего стационарного компьютера, планшета или
-                  мобильного телефона.
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
+    <section
+      class="tips-section"
+      :class="{ 'tips-section-show': showTipsSection === true }"
+    >
+      <v-container>
+        <v-row align="center" no-gutters style="height: 300px">
+          <v-col cols="12" sm="6" md="4">
+            <v-card
+              class="mx-2 my-2 info-card"
+              color="#63bcf9"
+              theme="dark"
+              prepend-icon="mdi-book"
+              title="Читай книги"
+              v-ripple
+            >
+              <v-card-text class="text-body-1 py-2">
+                Читай адаптированные и не адаптированне немецкие книги, слушай
+                песни и сказки , выбирай то, что нравится именно тебе
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="4">
+            <v-card
+              class="mx-2 my-2 info-card"
+              color="#63bcf9"
+              theme="dark"
+              prepend-icon="mdi-check"
+              title="Учи слова"
+              v-ripple
+            >
+              <v-card-text class="text-body-1 py-2">
+                Каждый текст собержит набор самых интересных и важных слов,
+                которые ты можешь добавить в свой личный кабинет для дальнейшего
+                изучения.
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="12" md="4">
+            <v-card
+              class="mx-2 my-2 info-card"
+              color="#63bcf9"
+              theme="dark"
+              prepend-icon="mdi-window-restore"
+              title="Учись на любом устройстве"
+              v-ripple
+            >
+              <v-card-text class="text-body-1 py-2">
+                Этот веб сайт адаптирован для работы на любом устройстве. Учись
+                со своего стационарного компьютера, планшета или мобильного
+                телефона.
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
     </section>
     <section>
       <div class="mb-16 mx-10">
@@ -118,8 +119,12 @@
 import { ref, onMounted } from "vue";
 import RandomBooksCarousel from "@/components/RandomBooksCarousel.vue";
 const carouselSection = ref(null);
+const showTipsSection = ref(false);
 
 onMounted(() => {
+  setTimeout(() => {
+    showTipsSection.value = true;
+  }, 800);
   const animateTipsSection = (entries, observer) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -137,6 +142,20 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.tips-section {
+  transform: translateY(250px);
+  opacity: 0;
+  transition: opacity 1s ease, transform 0.5s ease;
+}
+.tips-section-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.title-wrapper {
+  min-height: 400px;
+}
+
 .title {
   transition: transform 0.4s;
 }

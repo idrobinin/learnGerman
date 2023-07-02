@@ -8,25 +8,31 @@
         show-arrows
       >
         <v-slide-group-item v-for="book in shuffledBooks" :key="book.id">
-          <v-card
-            color="grey-lighten-1"
-            class="ma-4 book"
-            height="200"
-            width="150"
-            @click="goToBookPage(book)"
-          >
-            <v-img
-              :width="300"
-              aspect-ratio="16/9"
-              cover
-              :lazy-src="`${book.imageUrl}`"
-              :src="`${book.imageUrl}`"
+          <v-hover v-slot="{ isHovering, props }">
+            <v-card
+              v-bind="props"
+              color="grey-lighten-1"
+              class="ma-4 book"
+              height="200"
+              width="150"
+              @click="goToBookPage(book)"
             >
-              <v-tooltip activator="parent" location="botton">{{
-                book.title
-              }}</v-tooltip>
-            </v-img>
-          </v-card>
+              <v-img
+                :width="300"
+                aspect-ratio="16/9"
+                cover
+                :lazy-src="`${book.imageUrl}`"
+                :src="`${book.imageUrl}`"
+              >
+                <v-overlay
+                  :model-value="isHovering"
+                  contained
+                  class="mx-auto justify-center"
+                >
+                </v-overlay>
+              </v-img>
+            </v-card>
+          </v-hover>
         </v-slide-group-item>
       </v-slide-group>
     </v-sheet>
