@@ -152,10 +152,6 @@ onMounted(() => {
   transform: translateY(0);
 }
 
-.title-wrapper {
-  min-height: 400px;
-}
-
 .title {
   transition: transform 0.4s;
 }
@@ -183,7 +179,7 @@ onMounted(() => {
   font-size: 1em;
 }
 
-@media screen and (max-width: 959px) {
+@media (width < 959px) {
   .tips-section {
     height: 490px;
   }
@@ -191,7 +187,7 @@ onMounted(() => {
     height: 195px;
   }
 }
-@media screen and (max-width: 599px) {
+@media (width < 599px) {
   .tips-section {
     height: 610px;
   }
